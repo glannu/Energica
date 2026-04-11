@@ -1,0 +1,118 @@
+{
+  "theme": {
+    "mode": "light",
+    "archetype": "4 (Swiss & High-Contrast)",
+    "description": "Clean, rich white background B2B e-commerce platform. Focuses on technical authority, high legibility, and product visibility. Uses strong geometric typography and minimal, functional color accents to guide the 'Add to Quote' and WhatsApp workflow."
+  },
+  "typography": {
+    "heading_font": "Outfit",
+    "body_font": "IBM Plex Sans",
+    "scales": {
+      "h1": "text-4xl sm:text-5xl tracking-tight font-bold text-neutral-950",
+      "h2": "text-2xl sm:text-3xl tracking-tight font-semibold text-neutral-900",
+      "h3": "text-xl font-medium text-neutral-900",
+      "body": "text-base leading-relaxed text-neutral-700",
+      "small": "text-sm text-neutral-500",
+      "label": "text-xs font-bold uppercase tracking-[0.1em] text-neutral-500"
+    }
+  },
+  "colors": {
+    "background": {
+      "default": "#FFFFFF",
+      "subtle": "#F5F5F5",
+      "drawer": "#FAFAFA"
+    },
+    "text": {
+      "primary": "#0A0A0A",
+      "secondary": "#525252",
+      "muted": "#737373"
+    },
+    "border": {
+      "default": "#E5E5E5",
+      "focus": "#D4D4D4"
+    },
+    "brand": {
+      "primary": "#EA580C",
+      "primary_hover": "#C2410C",
+      "secondary": "#0369A1",
+      "whatsapp": "#16A34A",
+      "whatsapp_hover": "#15803D"
+    }
+  },
+  "layout": {
+    "global_spacing": "px-4 sm:px-6 lg:px-8",
+    "store_grid": "grid grid-cols-1 md:grid-cols-12 gap-8 items-start",
+    "sidebar": "md:col-span-3 lg:col-span-2 sticky top-24 hidden md:block",
+    "product_feed": "md:col-span-9 lg:col-span-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",
+    "admin_layout": "max-w-7xl mx-auto py-8 px-4"
+  },
+  "components": {
+    "product_card": {
+      "wrapper": "group relative flex flex-col bg-white border border-neutral-200 rounded-xl overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-neutral-300 transition-all duration-300",
+      "image_container": "aspect-square bg-neutral-50 p-4 flex items-center justify-center relative",
+      "content": "p-5 flex flex-col flex-grow",
+      "title": "font-heading font-semibold text-neutral-900 mb-1 line-clamp-2 leading-tight",
+      "price": "text-lg font-bold text-neutral-900 mt-auto",
+      "button": "w-full mt-4 bg-white text-brand-primary border border-brand-primary hover:bg-brand-primary hover:text-white font-medium py-2 rounded-md transition-colors data-[testid='add-to-quote-btn']"
+    },
+    "buttons": {
+      "primary": "inline-flex items-center justify-center rounded-lg bg-[#EA580C] px-4 py-2 text-sm font-semibold text-white hover:bg-[#C2410C] transition-colors",
+      "whatsapp": "inline-flex items-center justify-center rounded-lg bg-[#16A34A] px-6 py-3 text-base font-bold text-white hover:bg-[#15803D] transition-colors w-full shadow-sm"
+    },
+    "header": {
+      "wrapper": "sticky top-0 z-50 w-full border-b border-neutral-200 bg-white/80 backdrop-blur-xl",
+      "inner": "flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto"
+    }
+  },
+  "motion": {
+    "hover_card": "transition-all duration-300 ease-out hover:-translate-y-1",
+    "page_load": "animate-in fade-in slide-in-from-bottom-4 duration-500",
+    "drawer_slide": "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right"
+  },
+  "media": {
+    "images": {
+      "logo": {
+        "url": "https://www.energicasolutions.com/Energica%20Logo%20-1-.webp",
+        "description": "Energica Solutions Logo",
+        "category": "brand"
+      },
+      "category_solar_panels": {
+        "url": "https://images.unsplash.com/photo-1770810416523-bf40d844a248?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHw0fHxtb2Rlcm4lMjBzb2xhciUyMHBhbmVscyUyMHJvb2Z8ZW58MHx8fHwxNzc1OTM0NjAwfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Modern building with large solar panels",
+        "category": "product_placeholder"
+      },
+      "category_inverters": {
+        "url": "https://images.unsplash.com/photo-1544350224-c6190ca2a967?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHwyfHxlbGVjdHJpYyUyMHBhbmVsJTIwYm94fGVufDB8fHx8MTc3NTkzNDYzMHww&ixlib=rb-4.1.0&q=85",
+        "description": "Industrial electrical panel / inverter proxy",
+        "category": "product_placeholder"
+      },
+      "category_batteries": {
+        "url": "https://images.unsplash.com/photo-1581244249923-172ef5029576?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHw0fHxsaXRoaXVtJTIwYmF0dGVyeXxlbnwwfHx8fDE3NzU5MzQ2MzB8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Lithium battery cell proxy",
+        "category": "product_placeholder"
+      },
+      "category_cables": {
+        "url": "https://images.unsplash.com/photo-1758965364875-e090e5423d2d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwyfHxpbmR1c3RyaWFsJTIwZWxlY3RyaWNhbCUyMGNhYmxlcyUyMHJvbGxzfGVufDB8fHx8MTc3NTkzNDYxOHww&ixlib=rb-4.1.0&q=85",
+        "description": "Large industrial reel with black coiled cable",
+        "category": "product_placeholder"
+      },
+      "hero_banner": {
+        "url": "https://images.unsplash.com/photo-1726795867801-63c0a37b80c6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBzb2xhciUyMHBhbmVscyUyMHJvb2Z8ZW58MHx8fHwxNzc1OTM0NjAwfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Large array of modern solar tiles",
+        "category": "hero"
+      },
+      "shipping_logistics": {
+        "url": "https://images.unsplash.com/photo-1759272548470-d0686d071036?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHwzfHxpbmR1c3RyaWFsJTIwd2FyZWhvdXNlJTIwc2hpcHBpbmclMjBjYXJnb3xlbnwwfHx8fDE3NzU5MzQ2MDB8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Shipping containers stacked at port",
+        "category": "background"
+      }
+    }
+  },
+  "instructions_to_main_agent": {
+    "store_workflow": "Create a robust Shadcn 'Sheet' component for the 'Quote Cart'. When 'Add to Quote' is clicked on a product, it goes here. The sheet should display items, a subtotal, a 'Transit Mode' select dropdown (Ex-Works, Door Delivery, Transport/Freight), and a massive green WhatsApp CTA button.",
+    "whatsapp_integration": "The WhatsApp button MUST encode the cart contents, transit mode, and user's intent into a URL string and open `https://wa.me/918007520000?text=...`. Example: 'Hello Energica Solutions, I would like to request a quote for: 1x 12W Solar Street Light... Transit: Ex-Works.'",
+    "product_pages": "Implement a dynamic route for products `/product/:id`. Use a 2-column layout: left side large image + thumbnails, right side title, specs, 'Add to Quote' button, and a prominent 'Download Datasheet' secondary button (simulated PDF download link). Below, show 'Applications' and 'Similar Products' in a grid.",
+    "admin_panel": "Build a clean `/admin` route (mocked auth is fine if not specified) with Shadcn Tabs. Tab 1: Products (Shadcn Table with Add/Edit/Delete actions for stock and prices). Tab 2: RFQs (Read-only view of past RFQs, mocked data).",
+    "testing": "Ensure all Add to Quote buttons have `data-testid='add-to-quote-button'`, the WhatsApp submit button has `data-testid='submit-whatsapp-rfq-button'`, and category filters use `data-testid='category-filter-[name]'`."
+  }
+}
