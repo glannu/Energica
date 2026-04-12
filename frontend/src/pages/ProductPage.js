@@ -52,24 +52,24 @@ export default function ProductPage() {
         <span className="text-neutral-900 font-medium truncate">{product.name}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 mb-16">
         {/* Image */}
-        <div className="bg-neutral-50 rounded-2xl p-8 flex items-center justify-center border border-neutral-100 aspect-square lg:aspect-auto lg:min-h-[400px]" data-testid="product-image-container">
-          <img src={product.image_url} alt={product.name} className="max-h-80 max-w-full object-contain" />
+        <div className="bg-neutral-50 rounded-2xl p-4 sm:p-8 flex items-center justify-center border border-neutral-100 aspect-square lg:aspect-auto lg:min-h-[400px]" data-testid="product-image-container">
+          <img src={product.image_url} alt={product.name} className="max-h-60 sm:max-h-80 max-w-full object-contain" />
         </div>
 
         {/* Details */}
         <div data-testid="product-details">
           <Badge variant="secondary" className="mb-3 text-xs font-bold uppercase tracking-wider">{product.category}</Badge>
-          <h1 className="font-heading text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight mb-2" data-testid="product-title">{product.name}</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-2" data-testid="product-title">{product.name}</h1>
           {product.item_code && <p className="text-sm text-neutral-400 mb-4">SKU: {product.item_code}</p>}
 
           <div className="flex items-baseline gap-3 mb-4">
-            <span className="text-3xl font-bold font-heading text-neutral-900" data-testid="product-price">{formatPrice(product.price)}</span>
-            <span className="text-base text-neutral-500">/ {product.uom}</span>
+            <span className="text-2xl sm:text-3xl font-bold font-heading text-neutral-900" data-testid="product-price">{formatPrice(product.price)}</span>
+            <span className="text-sm sm:text-base text-neutral-500">/ {product.uom}</span>
           </div>
 
-          <div className="flex items-center gap-2 mb-6" data-testid="stock-status">
+          <div className="flex flex-wrap items-center gap-2 mb-6" data-testid="stock-status">
             {product.in_stock ? (
               <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200"><CheckCircle className="h-3 w-3 mr-1" /> In Stock ({product.stock} available)</Badge>
             ) : (
@@ -78,12 +78,12 @@ export default function ProductPage() {
             {product.gst_rate && <Badge variant="outline" className="text-xs">GST: {product.gst_rate}%</Badge>}
           </div>
 
-          <p className="text-neutral-600 leading-relaxed mb-6" data-testid="product-description">{product.description}</p>
+          <p className="text-neutral-600 leading-relaxed mb-6 text-sm sm:text-base" data-testid="product-description">{product.description}</p>
 
           <Separator className="my-6" />
 
           {/* Quantity & Add to Quote */}
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
             <Label className="text-sm font-medium text-neutral-700">Quantity:</Label>
             <div className="flex items-center border border-neutral-200 rounded-lg">
               <Button variant="ghost" size="icon" className="h-10 w-10 rounded-r-none" onClick={() => setQuantity(Math.max(product.moq || 1, quantity - 1))} data-testid="detail-decrease-qty">
@@ -97,31 +97,31 @@ export default function ProductPage() {
             {product.moq > 1 && <span className="text-xs text-neutral-400">Min: {product.moq}</span>}
           </div>
 
-          <div className="flex gap-3 mb-6">
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
             <Button
               data-testid="detail-add-to-quote-button"
-              className="flex-1 bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold py-6"
+              className="flex-1 bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold py-4 sm:py-6"
               onClick={handleAddToQuote}
               disabled={!product.in_stock}
             >
               <Plus className="h-4 w-4 mr-2" /> Add to Quote
             </Button>
-            <Button variant="outline" className="py-6" onClick={handleDatasheetRequest} data-testid="download-datasheet-btn">
+            <Button variant="outline" className="py-4 sm:py-6" onClick={handleDatasheetRequest} data-testid="download-datasheet-btn">
               <Download className="h-4 w-4 mr-2" /> Datasheet
             </Button>
           </div>
 
-          <Button variant="outline" className="w-full border-brand-whatsapp text-brand-whatsapp hover:bg-brand-whatsapp hover:text-white py-5" onClick={handleDatasheetRequest} data-testid="whatsapp-enquiry-btn">
+          <Button variant="outline" className="w-full border-brand-whatsapp text-brand-whatsapp hover:bg-brand-whatsapp hover:text-white py-4 sm:py-5" onClick={handleDatasheetRequest} data-testid="whatsapp-enquiry-btn">
             <MessageCircle className="h-4 w-4 mr-2" /> Enquire on WhatsApp
           </Button>
         </div>
       </div>
 
       {/* Features & Specs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-16">
         {product.features?.length > 0 && (
-          <div className="bg-neutral-50 rounded-xl p-6 border border-neutral-100" data-testid="product-features">
-            <h2 className="font-heading font-semibold text-lg text-neutral-900 mb-4">Key Features</h2>
+          <div className="bg-neutral-50 rounded-xl p-4 sm:p-6 border border-neutral-100" data-testid="product-features">
+            <h2 className="font-heading font-semibold text-base sm:text-lg text-neutral-900 mb-4">Key Features</h2>
             <ul className="space-y-3">
               {product.features.map((f, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-neutral-700">
@@ -133,8 +133,8 @@ export default function ProductPage() {
           </div>
         )}
         {product.applications?.length > 0 && (
-          <div className="bg-neutral-50 rounded-xl p-6 border border-neutral-100" data-testid="product-applications">
-            <h2 className="font-heading font-semibold text-lg text-neutral-900 mb-4">Applications</h2>
+          <div className="bg-neutral-50 rounded-xl p-4 sm:p-6 border border-neutral-100" data-testid="product-applications">
+            <h2 className="font-heading font-semibold text-base sm:text-lg text-neutral-900 mb-4">Applications</h2>
             <ul className="space-y-3">
               {product.applications.map((a, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-neutral-700">
@@ -150,8 +150,8 @@ export default function ProductPage() {
       {/* Similar Products */}
       {product.similar_products?.length > 0 && (
         <section data-testid="similar-products">
-          <h2 className="font-heading font-semibold text-2xl text-neutral-900 mb-6">Similar Products</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <h2 className="font-heading font-semibold text-xl sm:text-2xl text-neutral-900 mb-6">Similar Products</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {product.similar_products.map(p => <ProductCard key={p.id} product={p} />)}
           </div>
         </section>

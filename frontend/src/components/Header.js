@@ -52,6 +52,9 @@ export default function Header() {
             <Phone className="h-4 w-4" />
             <span className="font-medium">1800 267 8283</span>
           </a>
+          <Link to="/admin/login" className="hidden md:flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors px-3 py-2 rounded-md hover:bg-neutral-50">
+            Admin
+          </Link>
           <button data-testid="mobile-search-btn" className="md:hidden p-2" onClick={() => setSearchOpen(!searchOpen)}>
             <Search className="h-5 w-5 text-neutral-600" />
           </button>

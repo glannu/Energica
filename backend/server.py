@@ -355,10 +355,19 @@ async def update_rfq_status(rfq_id: str, status: str, admin=Depends(get_current_
 # ─── INCLUDE ROUTER & MIDDLEWARE ───
 app.include_router(api_router)
 
+# Configure CORS based on environment
+cors_origins = os.environ.get('CORS_ORIGINS', '*')
+if cors_origins == '*':
+    # Development: allow all origins
+    allow_origins = ['*']
+else:
+    # Production: specific origins
+    allow_origins = [origin.strip() for origin in cors_origins.split(',')]
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=allow_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

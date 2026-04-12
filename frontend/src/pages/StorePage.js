@@ -83,9 +83,9 @@ export default function StorePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         {/* Mobile Filter Toggle */}
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <Button variant="outline" onClick={() => setMobileSidebar(!mobileSidebar)} className="w-full justify-between" data-testid="mobile-filter-toggle">
             <span className="flex items-center gap-2"><SlidersHorizontal className="h-4 w-4" /> Filter by Category</span>
             <ChevronDown className={`h-4 w-4 transition-transform ${mobileSidebar ? 'rotate-180' : ''}`} />
@@ -93,7 +93,7 @@ export default function StorePage() {
         </div>
 
         {/* Sidebar */}
-        <aside className={`md:col-span-3 lg:col-span-2 ${mobileSidebar ? 'block' : 'hidden'} md:block md:sticky md:top-24`}>
+        <aside className={`lg:col-span-3 ${mobileSidebar ? 'block' : 'hidden'} lg:block lg:sticky lg:top-24`}>
           <div className="bg-white rounded-xl border border-neutral-200 p-4">
             <h2 className="font-heading font-semibold text-sm uppercase tracking-wider text-neutral-500 mb-3">Categories</h2>
             <div className="space-y-1">
@@ -119,13 +119,13 @@ export default function StorePage() {
         </aside>
 
         {/* Main Content */}
-        <div className="md:col-span-9 lg:col-span-10">
+        <div className="lg:col-span-9">
           {/* Controls */}
           <div className="flex flex-col sm:flex-row gap-3 mb-6 items-start sm:items-center justify-between">
-            <div className="flex items-center gap-3 flex-wrap">
-              <form onSubmit={handleSearchSubmit} className="relative">
+            <div className="flex items-center gap-3 flex-wrap w-full sm:w-auto">
+              <form onSubmit={handleSearchSubmit} className="relative flex-1 sm:flex-none">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-                <Input data-testid="store-search-input" placeholder="Search..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10 w-56 h-9" />
+                <Input data-testid="store-search-input" placeholder="Search..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10 w-full sm:w-56 h-9" />
               </form>
               {selectedCategory && (
                 <Badge variant="secondary" className="gap-1 cursor-pointer hover:bg-neutral-200" onClick={() => setSelectedCategory("")}>
@@ -134,9 +134,9 @@ export default function StorePage() {
               )}
               <span className="text-sm text-neutral-500">{total} products</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
               <Select value={stockFilter} onValueChange={setStockFilter}>
-                <SelectTrigger className="w-32 h-9 text-sm" data-testid="stock-filter-select">
+                <SelectTrigger className="w-32 h-9 text-sm flex-shrink-0" data-testid="stock-filter-select">
                   <SelectValue placeholder="Stock" />
                 </SelectTrigger>
                 <SelectContent>
@@ -146,7 +146,7 @@ export default function StorePage() {
                 </SelectContent>
               </Select>
               <Select value={sort} onValueChange={setSort}>
-                <SelectTrigger className="w-40 h-9 text-sm" data-testid="sort-select">
+                <SelectTrigger className="w-40 h-9 text-sm flex-shrink-0" data-testid="sort-select">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -173,7 +173,7 @@ export default function StorePage() {
             </div>
           ) : (
             <>
-              <div data-testid="product-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              <div data-testid="product-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
                 {products.map((product, i) => (
                   <div key={product.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i * 40, 400)}ms` }}>
                     <ProductCard product={product} />
