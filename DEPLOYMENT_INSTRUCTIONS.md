@@ -1,5 +1,16 @@
 # Energica Store - Deployment Guide
 
+## Account Information
+
+**All deployment accounts use the following email:**
+- **Email**: glannu.social@gmail.com
+- **GitHub**: glannu/Energica repository
+- **Render**: Backend deployment
+- **Vercel**: Frontend deployment
+- **MongoDB Atlas**: Database hosting
+
+**Note**: Keep this information secure and update credentials if compromised.
+
 ## CORS Configuration ✅
 
 **No CORS issues expected.** The backend has been configured to handle both development and production environments:
