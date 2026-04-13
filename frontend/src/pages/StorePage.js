@@ -83,7 +83,7 @@ export default function StorePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
         {/* Mobile Filter Toggle */}
         <div className="lg:hidden">
           <Button variant="outline" onClick={() => setMobileSidebar(!mobileSidebar)} className="w-full justify-between" data-testid="mobile-filter-toggle">
@@ -93,7 +93,7 @@ export default function StorePage() {
         </div>
 
         {/* Sidebar */}
-        <aside className={`lg:col-span-3 ${mobileSidebar ? 'block' : 'hidden'} lg:block lg:sticky lg:top-24`}>
+        <aside className={`lg:col-span-3 xl:col-span-2 ${mobileSidebar ? 'block' : 'hidden'} lg:block lg:sticky lg:top-24`}>
           <div className="bg-white rounded-xl border border-neutral-200 p-4">
             <h2 className="font-heading font-semibold text-sm uppercase tracking-wider text-neutral-500 mb-3">Categories</h2>
             <div className="space-y-1">
@@ -119,7 +119,7 @@ export default function StorePage() {
         </aside>
 
         {/* Main Content */}
-        <div className="lg:col-span-9">
+        <div className="lg:col-span-9 xl:col-span-10">
           {/* Controls */}
           <div className="flex flex-col sm:flex-row gap-3 mb-6 items-start sm:items-center justify-between">
             <div className="flex items-center gap-3 flex-wrap w-full sm:w-auto">
@@ -173,7 +173,7 @@ export default function StorePage() {
             </div>
           ) : (
             <>
-              <div data-testid="product-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+              <div data-testid="product-grid" className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4">
                 {products.map((product, i) => (
                   <div key={product.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i * 40, 400)}ms` }}>
                     <ProductCard product={product} />
