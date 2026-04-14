@@ -97,43 +97,45 @@ export default function StorePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
-        {/* Mobile Filter Toggle */}
-        <div className="lg:hidden">
-          <Button variant="outline" onClick={() => setMobileSidebar(!mobileSidebar)} className="w-full justify-between" data-testid="mobile-filter-toggle">
-            <span className="flex items-center gap-2"><SlidersHorizontal className="h-4 w-4" /> Filter by Category</span>
-            <ChevronDown className={`h-4 w-4 transition-transform ${mobileSidebar ? 'rotate-180' : ''}`} />
-          </Button>
+      <div className="space-y-6">
+        {/* Categories Grid */}
+        <div className="bg-white rounded-xl border border-neutral-200 p-4">
+          <h2 className="font-heading font-semibold text-lg text-neutral-900 mb-4">Browse by Category</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <button
+              data-testid="category-filter-all"
+              onClick={() => handleCategoryClick("")}
+              className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md ${!selectedCategory ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
+            >
+              <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-2">
+                <SlidersHorizontal className="h-6 w-6 text-neutral-600" />
+              </div>
+              <span className="text-xs font-medium text-center">All Products</span>
+              <span className="text-xs text-neutral-500">{total}</span>
+            </button>
+            {categories.map(cat => (
+              <button
+                key={cat.name}
+                data-testid={`category-filter-${cat.name.toLowerCase().replace(/[\s&]+/g, '-')}`}
+                onClick={() => handleCategoryClick(cat.name)}
+                className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md ${selectedCategory === cat.name ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
+              >
+                {cat.image ? (
+                  <img src={cat.image} alt={cat.name} className="w-12 h-12 rounded-full object-cover mb-2" />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-2">
+                    <SlidersHorizontal className="h-6 w-6 text-neutral-400" />
+                  </div>
+                )}
+                <span className="text-xs font-medium text-center line-clamp-2">{cat.name}</span>
+                <span className="text-xs text-neutral-500">{cat.count}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Sidebar */}
-        <aside className={`lg:col-span-3 xl:col-span-2 ${mobileSidebar ? 'block' : 'hidden'} lg:block lg:sticky lg:top-24`}>
-          <div className="bg-white rounded-xl border border-neutral-200 p-4">
-            <h2 className="font-heading font-semibold text-sm uppercase tracking-wider text-neutral-500 mb-3">Categories</h2>
-            <div className="space-y-1">
-              <button
-                data-testid="category-filter-all"
-                onClick={() => handleCategoryClick("")}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!selectedCategory ? 'bg-brand-primary text-white' : 'text-neutral-700 hover:bg-neutral-100'}`}
-              >
-                All Products <span className="text-xs opacity-70 ml-1">({total})</span>
-              </button>
-              {categories.map(cat => (
-                <button
-                  key={cat.name}
-                  data-testid={`category-filter-${cat.name.toLowerCase().replace(/[\s&]+/g, '-')}`}
-                  onClick={() => handleCategoryClick(cat.name)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${selectedCategory === cat.name ? 'bg-brand-primary text-white' : 'text-neutral-700 hover:bg-neutral-100'}`}
-                >
-                  {cat.name} <span className="text-xs opacity-70 ml-1">({cat.count})</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </aside>
-
         {/* Main Content */}
-        <div className="lg:col-span-9 xl:col-span-10">
+        <div>
           {/* Controls */}
           <div className="flex flex-col sm:flex-row gap-3 mb-6 items-start sm:items-center justify-between">
             <div className="flex items-center gap-3 flex-wrap w-full sm:w-auto">

@@ -373,7 +373,7 @@ async def delete_product(product_id: str, admin=Depends(get_current_admin)):
 async def list_categories():
     pipeline = [{"$group": {"_id": "$category", "count": {"$sum": 1}}}, {"$sort": {"_id": 1}}]
     results = await db.products.aggregate(pipeline).to_list(50)
-    return [{"name": r["_id"], "count": r["count"]} for r in results]
+    return [{"name": r["_id"], "count": r["count"], "image": CATEGORY_IMAGES.get(r["_id"], "")} for r in results]
 
 # ─── RFQ ENDPOINTS ───
 @api_router.post("/rfq")
