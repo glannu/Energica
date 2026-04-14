@@ -130,11 +130,10 @@ export default function StorePage() {
                   onClick={() => handleCategoryClick("")}
                   className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${!selectedCategory ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
                 >
-                  <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-2">
-                    <SlidersHorizontal className="h-6 w-6 text-neutral-600" />
+                  <div className="w-20 h-20 rounded-lg bg-neutral-100 flex items-center justify-center mb-2">
+                    <SlidersHorizontal className="h-8 w-8 text-neutral-600" />
                   </div>
-                  <span className="text-xs font-medium text-center">All Products</span>
-                  <span className="text-xs text-neutral-500">{total}</span>
+                  <span className="text-sm font-medium text-center">All Products</span>
                 </button>
                 {categories.map(cat => (
                   <button
@@ -144,14 +143,13 @@ export default function StorePage() {
                     className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${selectedCategory === cat.name ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
                   >
                     {cat.image ? (
-                      <img src={cat.image} alt={cat.name} className="w-12 h-12 rounded-full object-cover mb-2" />
+                      <img src={cat.image} alt={cat.name} className="w-20 h-20 rounded-lg object-cover mb-2" />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-2">
-                        <SlidersHorizontal className="h-6 w-6 text-neutral-400" />
+                      <div className="w-20 h-20 rounded-lg bg-neutral-100 flex items-center justify-center mb-2">
+                        <SlidersHorizontal className="h-8 w-8 text-neutral-400" />
                       </div>
                     )}
-                    <span className="text-xs font-medium text-center line-clamp-2 w-20">{cat.name}</span>
-                    <span className="text-xs text-neutral-500">{cat.count}</span>
+                    <span className="text-sm font-medium text-center line-clamp-2 w-20">{cat.name}</span>
                   </button>
                 ))}
               </div>
