@@ -18,14 +18,46 @@ export default function ProductPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
+  const [similarProducts, setSimilarProducts] = useState([]);
 
   useEffect(() => {
     setLoading(true);
     axios.get(`${API}/products/${id}`).then(({ data }) => {
       setProduct(data);
       setQuantity(data.moq || 1);
+
+      // Add to recently viewed
+      addToRecentlyViewed(data);
+
+      // If similar products not provided by backend, fetch by category
+      if (!data.similar_products || data.similar_products.length === 0) {
+        fetchSimilarProducts(data.category, data.id);
+      } else {
+        setSimilarProducts(data.similar_products);
+      }
     }).catch(() => toast.error("Product not found")).finally(() => setLoading(false));
   }, [id]);
+
+  const addToRecentlyViewed = (product) => {
+    const viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    const filtered = viewed.filter(p => p.id !== product.id);
+    const updated = [product, ...filtered].slice(0, 8); // Keep max 8 items
+    localStorage.setItem('recentlyViewed', JSON.stringify(updated));
+    setRecentlyViewed(updated);
+  };
+
+  const fetchSimilarProducts = async (category, currentProductId) => {
+    try {
+      const { data } = await axios.get(`${API}/products`, {
+        params: { category, limit: 4 }
+      });
+      const filtered = data.products.filter(p => p.id !== currentProductId);
+      setSimilarProducts(filtered.slice(0, 4));
+    } catch (err) {
+      console.error("Error fetching similar products:", err);
+    }
+  };
 
   if (loading) return <div className="flex justify-center py-32"><Loader2 className="h-8 w-8 animate-spin text-brand-primary" /></div>;
   if (!product) return <div className="text-center py-32 text-neutral-500">Product not found</div>;
@@ -148,11 +180,23 @@ export default function ProductPage() {
       </div>
 
       {/* Similar Products */}
-      {product.similar_products?.length > 0 && (
-        <section data-testid="similar-products">
+      {similarProducts.length > 0 && (
+        <section data-testid="similar-products" className="mb-16">
           <h2 className="font-heading font-semibold text-xl sm:text-2xl text-neutral-900 mb-6">Similar Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            {product.similar_products.map(p => <ProductCard key={p.id} product={p} />)}
+            {similarProducts.map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
+        </section>
+      )}
+
+      {/* Recently Viewed */}
+      {recentlyViewed.length > 1 && (
+        <section data-testid="recently-viewed">
+          <h2 className="font-heading font-semibold text-xl sm:text-2xl text-neutral-900 mb-6">Recently Viewed</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {recentlyViewed.filter(p => p.id !== product.id).slice(0, 4).map(p => (
+              <ProductCard key={p.id} product={p} />
+            ))}
           </div>
         </section>
       )}
