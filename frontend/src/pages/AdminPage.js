@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -163,6 +163,7 @@ function EditProductDialog({ product, onClose, onSave }) {
   const [imageUrl, setImageUrl] = useState(product.image_url || "");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -183,6 +184,10 @@ function EditProductDialog({ product, onClose, onSave }) {
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
   };
 
   const handleSubmit = async () => {
@@ -212,18 +217,17 @@ function EditProductDialog({ product, onClose, onSave }) {
                   onChange={e => setImageUrl(e.target.value)}
                   className="flex-1"
                 />
-                <label className="cursor-pointer">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    disabled={uploading}
-                  />
-                  <Button type="button" variant="outline" size="icon" disabled={uploading}>
-                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                  </Button>
-                </label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  disabled={uploading}
+                  ref={fileInputRef}
+                />
+                <Button type="button" variant="outline" size="icon" onClick={handleUploadClick} disabled={uploading}>
+                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                </Button>
               </div>
               <p className="text-xs text-neutral-500">Upload image from local or paste URL from Drive/Cloud</p>
             </div>
