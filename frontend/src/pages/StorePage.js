@@ -111,20 +111,19 @@ export default function StorePage() {
       <div className="space-y-6">
         {/* Categories Horizontal Scroll */}
         <div className="bg-white rounded-xl border border-neutral-200 p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-heading font-semibold text-lg text-neutral-900">Browse by Category</h2>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 mb-3">
+            {selectedCategory && (
+              <Button variant="ghost" size="sm" onClick={() => handleCategoryClick("")} className="text-brand-primary hover:text-brand-primary-hover">
+                <X className="h-4 w-4 mr-1" /> Clear
+              </Button>
+            )}
+            <div className="flex-1 flex justify-end gap-2">
               <Button variant="outline" size="icon" onClick={() => scrollCategories('left')} className="flex-shrink-0">
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <Button variant="outline" size="icon" onClick={() => scrollCategories('right')} className="flex-shrink-0">
                 <ChevronRight className="h-4 w-4" />
               </Button>
-              {selectedCategory && (
-                <Button variant="ghost" size="sm" onClick={() => handleCategoryClick("")} className="text-brand-primary hover:text-brand-primary-hover ml-2">
-                  <X className="h-4 w-4 mr-1" /> Clear
-                </Button>
-              )}
             </div>
           </div>
           <div ref={categoryScrollRef} className="overflow-x-auto scrollbar-hide">
