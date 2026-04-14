@@ -4,9 +4,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Trash2, Plus, Minus, MessageCircle, Truck, Package, Building } from "lucide-react";
+import { Trash2, Plus, Minus, MessageCircle, Truck, Package, Building, CheckCircle2, ArrowRight, RefreshCw } from "lucide-react";
 import { useQuote } from "@/context/QuoteContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 
@@ -20,6 +20,15 @@ export default function QuoteDrawer() {
   const [transitMode, setTransitMode] = useState("Ex-Works");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
+  const [submittedRFQDetails, setSubmittedRFQDetails] = useState(null);
+
+  // Reset success screen when drawer opens with items
+  useEffect(() => {
+    if (isDrawerOpen && items.length > 0) {
+      setShowSuccessScreen(false);
+    }
+  }, [isDrawerOpen, items.length]);
 
   const handleWhatsAppSubmit = async () => {
     if (items.length === 0) return;
@@ -45,8 +54,31 @@ export default function QuoteDrawer() {
     if (customerPhone) msg += `Phone: ${customerPhone}\n`;
     msg += `\nPlease share your best quotation.\nThank you!`;
 
+    // Store RFQ details for success screen
+    setSubmittedRFQDetails({
+      itemCount: items.length,
+      totalAmount,
+      customerName,
+      customerPhone,
+      transitMode
+    });
+
+    // Clear cart
+    clearCart();
+
+    // Open WhatsApp
     window.open(`https://wa.me/918007520000?text=${encodeURIComponent(msg)}`, '_blank');
-    toast.success("RFQ sent! Check WhatsApp to complete your request.");
+
+    // Show success screen
+    setShowSuccessScreen(true);
+    toast.success("RFQ sent successfully!");
+  };
+
+  const handleStartFresh = () => {
+    setShowSuccessScreen(false);
+    setCustomerName("");
+    setCustomerPhone("");
+    setTransitMode("Ex-Works");
   };
 
   return (
@@ -56,7 +88,52 @@ export default function QuoteDrawer() {
           <SheetTitle className="font-heading text-xl">Your Quote ({totalItems} items)</SheetTitle>
         </SheetHeader>
 
-        {items.length === 0 ? (
+        {showSuccessScreen ? (
+          <div className="flex-1 flex items-center justify-center p-8">
+            <div className="text-center max-w-sm">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle2 className="h-10 w-10 text-green-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-neutral-900 mb-2">RFQ Sent Successfully!</h3>
+              <p className="text-neutral-600 mb-6">Your request has been submitted via WhatsApp. Our team will get back to you with the best quotation.</p>
+
+              <div className="bg-neutral-50 rounded-lg p-4 mb-6 text-left">
+                <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">RFQ Summary</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-neutral-500">Items</span>
+                    <span className="font-medium text-neutral-900">{submittedRFQDetails?.itemCount || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-neutral-500">Estimated Total</span>
+                    <span className="font-medium text-neutral-900">{formatPrice(submittedRFQDetails?.totalAmount || 0)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-neutral-500">Transit Mode</span>
+                    <span className="font-medium text-neutral-900">{submittedRFQDetails?.transitMode || 'Ex-Works'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Button
+                  onClick={handleStartFresh}
+                  className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-medium"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Start New RFQ
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="w-full"
+                >
+                  Continue Browsing
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : items.length === 0 ? (
           <div className="flex-1 flex items-center justify-center p-8">
             <div className="text-center">
               <Package className="h-12 w-12 text-neutral-300 mx-auto mb-3" />
