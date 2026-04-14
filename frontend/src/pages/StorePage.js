@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { Search, SlidersHorizontal, ChevronDown, Loader2 } from "lucide-react";
+import { SlidersHorizontal, ChevronDown, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,6 @@ export default function StorePage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "");
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const [sort, setSort] = useState("name_asc");
   const [stockFilter, setStockFilter] = useState("");
   const [mobileSidebar, setMobileSidebar] = useState(false);
@@ -33,6 +32,7 @@ export default function StorePage() {
     try {
       const params = { page: p, limit: 20, sort };
       if (selectedCategory) params.category = selectedCategory;
+      const searchQuery = searchParams.get("search");
       if (searchQuery) params.search = searchQuery;
       if (stockFilter) params.in_stock = stockFilter;
       const { data } = await axios.get(`${API}/products`, { params });
@@ -47,7 +47,7 @@ export default function StorePage() {
       if (append) setLoadingMore(false);
       else setLoading(false);
     }
-  }, [selectedCategory, searchQuery, sort, stockFilter]);
+  }, [selectedCategory, sort, stockFilter, searchParams]);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -57,11 +57,6 @@ export default function StorePage() {
   }, []);
 
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
-
-  useEffect(() => {
-    const s = searchParams.get("search");
-    if (s) setSearchQuery(s);
-  }, [searchParams]);
 
   useEffect(() => {
     fetchProducts(1, false);
@@ -89,11 +84,6 @@ export default function StorePage() {
   const handleCategoryClick = (cat) => {
     setSelectedCategory(cat === selectedCategory ? "" : cat);
     setMobileSidebar(false);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    setSearchParams(searchQuery ? { search: searchQuery } : {});
   };
 
   return (
@@ -147,10 +137,6 @@ export default function StorePage() {
           {/* Controls */}
           <div className="flex flex-col sm:flex-row gap-3 mb-6 items-start sm:items-center justify-between">
             <div className="flex items-center gap-3 flex-wrap w-full sm:w-auto">
-              <form onSubmit={handleSearchSubmit} className="relative flex-1 sm:flex-none">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-                <Input data-testid="store-search-input" placeholder="Search..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10 w-full sm:w-56 h-9" />
-              </form>
               {selectedCategory && (
                 <Badge variant="secondary" className="gap-1 cursor-pointer hover:bg-neutral-200" onClick={() => setSelectedCategory("")}>
                   {selectedCategory} <span className="ml-1 text-neutral-400">&times;</span>

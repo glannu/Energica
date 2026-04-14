@@ -1,16 +1,22 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, Search, Phone, Menu, X } from "lucide-react";
+import { ShoppingCart, Search, Phone, Menu, X, Package, Tag, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useQuote } from "@/context/QuoteContext";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function Header() {
   const { totalItems, setIsDrawerOpen } = useQuote();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState({ products: [], categories: [] });
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -19,8 +25,53 @@ export default function Header() {
       navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
       setMobileMenuOpen(false);
+      setShowDropdown(false);
     }
   };
+
+  const fetchSearchResults = useCallback(async (query) => {
+    if (query.trim().length < 2) {
+      setSearchResults({ products: [], categories: [] });
+      setShowDropdown(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    try {
+      const [productsRes, categoriesRes] = await Promise.all([
+        axios.get(`${API}/products`, { params: { search: query, limit: 5 } }),
+        axios.get(`${API}/categories`)
+      ]);
+
+      const filteredCategories = categoriesRes.data.filter(cat =>
+        cat.name.toLowerCase().includes(query.toLowerCase())
+      ).slice(0, 3);
+
+      setSearchResults({
+        products: productsRes.data.products || [],
+        categories: filteredCategories
+      });
+      setShowDropdown(true);
+    } catch (err) {
+      console.error("Search error:", err);
+      setSearchResults({ products: [], categories: [] });
+    } finally {
+      setSearchLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      if (searchQuery) {
+        fetchSearchResults(searchQuery);
+      } else {
+        setShowDropdown(false);
+        setSearchResults({ products: [], categories: [] });
+      }
+    }, 300);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchQuery, fetchSearchResults]);
 
   return (
     <header data-testid="site-header" className="sticky top-0 z-50 w-full border-b border-neutral-200 bg-white/90 backdrop-blur-xl">
@@ -34,18 +85,74 @@ export default function Header() {
           </Link>
         </div>
 
-        <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md mx-8">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-            <Input
-              data-testid="search-input"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-neutral-50 border-neutral-200 focus:bg-white h-10"
-            />
-          </div>
-        </form>
+        <div className="hidden md:flex items-center flex-1 max-w-md mx-8 relative">
+          <form onSubmit={handleSearch} className="w-full">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+              <Input
+                data-testid="search-input"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setShowDropdown(searchQuery.length >= 2 && (searchResults.products.length > 0 || searchResults.categories.length > 0))}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                className="pl-10 bg-neutral-50 border-neutral-200 focus:bg-white h-10"
+              />
+            </div>
+          </form>
+
+          {/* Search Dropdown */}
+          {showDropdown && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-neutral-200 z-50 max-h-96 overflow-y-auto">
+              {searchLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-5 w-5 animate-spin text-brand-primary" />
+                </div>
+              ) : (
+                <>
+                  {searchResults.categories.length > 0 && (
+                    <div className="p-3 border-b border-neutral-100">
+                      <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Categories</p>
+                      {searchResults.categories.map(cat => (
+                        <Link
+                          key={cat.name}
+                          to={`/?category=${encodeURIComponent(cat.name)}`}
+                          onClick={() => { setSearchQuery(''); setShowDropdown(false); }}
+                          className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-neutral-50 text-sm text-neutral-700"
+                        >
+                          <Tag className="h-4 w-4 text-neutral-400" />
+                          {cat.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  {searchResults.products.length > 0 && (
+                    <div className="p-3">
+                      <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Products</p>
+                      {searchResults.products.map(product => (
+                        <Link
+                          key={product.id}
+                          to={`/product/${product.id}`}
+                          onClick={() => { setSearchQuery(''); setShowDropdown(false); }}
+                          className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-neutral-50 text-sm text-neutral-700"
+                        >
+                          <Package className="h-4 w-4 text-neutral-400" />
+                          <span className="flex-1 truncate">{product.name}</span>
+                          <span className="text-xs text-neutral-400">₹{product.price}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  {searchResults.products.length === 0 && searchResults.categories.length === 0 && searchQuery.length >= 2 && (
+                    <div className="p-4 text-center text-sm text-neutral-500">
+                      No results found
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="flex items-center gap-3">
           <a href="tel:18002678283" className="hidden lg:flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors" data-testid="phone-link">
