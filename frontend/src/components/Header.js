@@ -80,7 +80,7 @@ export default function Header() {
           <button data-testid="mobile-menu-btn" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <Link to="/" className="flex items-center gap-2" data-testid="logo-link">
+          <Link to="/" className="flex items-center gap-2" data-testid="logo-link" onClick={() => { setSearchOpen(false); setMobileMenuOpen(false); setShowDropdown(false); }}>
             <img src="https://www.energicasolutions.com/Energica%20Logo%20-1-.webp" alt="Energica Solutions" className="h-9 w-auto" />
           </Link>
         </div>
