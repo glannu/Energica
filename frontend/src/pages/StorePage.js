@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { SlidersHorizontal, ChevronDown, Loader2 } from "lucide-react";
+import { SlidersHorizontal, ChevronDown, Loader2, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +25,17 @@ export default function StorePage() {
   const [mobileSidebar, setMobileSidebar] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const categoryScrollRef = useRef(null);
+
+  const scrollCategories = (direction) => {
+    if (categoryScrollRef.current) {
+      const scrollAmount = 300;
+      categoryScrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const fetchProducts = useCallback(async (p = 1, append = false) => {
     if (append) setLoadingMore(true);
@@ -98,39 +109,56 @@ export default function StorePage() {
       </div>
 
       <div className="space-y-6">
-        {/* Categories Grid */}
+        {/* Categories Horizontal Scroll */}
         <div className="bg-white rounded-xl border border-neutral-200 p-4">
-          <h2 className="font-heading font-semibold text-lg text-neutral-900 mb-4">Browse by Category</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            <button
-              data-testid="category-filter-all"
-              onClick={() => handleCategoryClick("")}
-              className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md ${!selectedCategory ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
-            >
-              <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-2">
-                <SlidersHorizontal className="h-6 w-6 text-neutral-600" />
-              </div>
-              <span className="text-xs font-medium text-center">All Products</span>
-              <span className="text-xs text-neutral-500">{total}</span>
-            </button>
-            {categories.map(cat => (
-              <button
-                key={cat.name}
-                data-testid={`category-filter-${cat.name.toLowerCase().replace(/[\s&]+/g, '-')}`}
-                onClick={() => handleCategoryClick(cat.name)}
-                className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md ${selectedCategory === cat.name ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
-              >
-                {cat.image ? (
-                  <img src={cat.image} alt={cat.name} className="w-12 h-12 rounded-full object-cover mb-2" />
-                ) : (
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-heading font-semibold text-lg text-neutral-900">Browse by Category</h2>
+            {selectedCategory && (
+              <Button variant="ghost" size="sm" onClick={() => handleCategoryClick("")} className="text-brand-primary hover:text-brand-primary-hover">
+                <X className="h-4 w-4 mr-1" /> Clear
+              </Button>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" onClick={() => scrollCategories('left')} className="flex-shrink-0">
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div ref={categoryScrollRef} className="flex-1 overflow-x-auto scrollbar-hide">
+              <div className="flex gap-3">
+                <button
+                  data-testid="category-filter-all"
+                  onClick={() => handleCategoryClick("")}
+                  className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${!selectedCategory ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
+                >
                   <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-2">
-                    <SlidersHorizontal className="h-6 w-6 text-neutral-400" />
+                    <SlidersHorizontal className="h-6 w-6 text-neutral-600" />
                   </div>
-                )}
-                <span className="text-xs font-medium text-center line-clamp-2">{cat.name}</span>
-                <span className="text-xs text-neutral-500">{cat.count}</span>
-              </button>
-            ))}
+                  <span className="text-xs font-medium text-center">All Products</span>
+                  <span className="text-xs text-neutral-500">{total}</span>
+                </button>
+                {categories.map(cat => (
+                  <button
+                    key={cat.name}
+                    data-testid={`category-filter-${cat.name.toLowerCase().replace(/[\s&]+/g, '-')}`}
+                    onClick={() => handleCategoryClick(cat.name)}
+                    className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${selectedCategory === cat.name ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
+                  >
+                    {cat.image ? (
+                      <img src={cat.image} alt={cat.name} className="w-12 h-12 rounded-full object-cover mb-2" />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-2">
+                        <SlidersHorizontal className="h-6 w-6 text-neutral-400" />
+                      </div>
+                    )}
+                    <span className="text-xs font-medium text-center line-clamp-2 w-20">{cat.name}</span>
+                    <span className="text-xs text-neutral-500">{cat.count}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <Button variant="outline" size="icon" onClick={() => scrollCategories('right')} className="flex-shrink-0">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
