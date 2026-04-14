@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Trash2, Plus, Minus, MessageCircle, Truck, Package, Building, CheckCircle2, ArrowRight, RefreshCw } from "lucide-react";
+import { Trash2, Plus, Minus, MessageCircle, Truck, Package, Building, CheckCircle2, ArrowRight, RefreshCw, Plane, Hand, Wallet, User } from "lucide-react";
 import { useQuote } from "@/context/QuoteContext";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -13,7 +13,18 @@ import axios from "axios";
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const formatPrice = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
 
-const TRANSIT_ICONS = { "Ex-Works": Package, "Door Delivery": Truck, "Transport/Freight": Building };
+const TRANSIT_ICONS = {
+  "Ex-Works": Package,
+  "Door Delivery": Truck,
+  "Transport/Freight": Building,
+  "Bluedart Air": Plane,
+  "Bluedart Road": Truck,
+  "Delhivery Road": Truck,
+  "By Hand": Hand,
+  "Porter to Pay": Wallet,
+  "Transport to Pay": Truck,
+  "Self courier": User
+};
 
 export default function QuoteDrawer() {
   const { items, removeItem, updateQuantity, clearCart, totalItems, totalAmount, isDrawerOpen, setIsDrawerOpen } = useQuote();
@@ -179,7 +190,7 @@ export default function QuoteDrawer() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {["Ex-Works", "Door Delivery", "Transport/Freight"].map(mode => {
+                    {["Ex-Works", "Door Delivery", "Transport/Freight", "Bluedart Air", "Bluedart Road", "Delhivery Road", "By Hand", "Porter to Pay", "Transport to Pay", "Self courier"].map(mode => {
                       const Icon = TRANSIT_ICONS[mode];
                       return (
                         <SelectItem key={mode} value={mode} data-testid={`transit-${mode.toLowerCase().replace(/[\s/]+/g, '-')}`}>
