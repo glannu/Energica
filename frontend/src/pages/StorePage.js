@@ -173,8 +173,10 @@ export default function StorePage() {
 
           {/* Product Grid */}
           {loading && products.length === 0 ? (
-            <div className="flex justify-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+            <div data-testid="product-grid" className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4">
+              {[...Array(10)].map((_, i) => (
+                <ProductCard key={`skeleton-${i}`} loading />
+              ))}
             </div>
           ) : products.length === 0 ? (
             <div className="text-center py-20">
@@ -193,8 +195,10 @@ export default function StorePage() {
               {/* Infinite scroll sentinel */}
               <div id="infinite-scroll-sentinel" className="h-4" />
               {loadingMore && (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-brand-primary" />
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4">
+                  {[...Array(4)].map((_, i) => (
+                    <ProductCard key={`skeleton-more-${i}`} loading />
+                  ))}
                 </div>
               )}
               {!hasMore && products.length > 0 && (

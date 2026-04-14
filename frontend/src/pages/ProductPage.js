@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import { ChevronRight, Plus, Minus, Download, CheckCircle, XCircle, Loader2, ArrowLeft, MessageCircle } from "lucide-react";
+import { ChevronRight, Plus, Minus, Download, CheckCircle, XCircle, ArrowLeft, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useQuote } from "@/context/QuoteContext";
 import { toast } from "sonner";
 import ProductCard from "@/components/ProductCard";
+import { Skeleton } from "@/components/Skeleton";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const formatPrice = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
@@ -59,7 +60,27 @@ export default function ProductPage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center py-32"><Loader2 className="h-8 w-8 animate-spin text-brand-primary" /></div>;
+  if (loading) {
+    return (
+      <main className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
+          <Skeleton className="aspect-square lg:aspect-auto lg:min-h-[400px] rounded-2xl" />
+          <div className="space-y-4">
+            <Skeleton className="w-24 h-6" />
+            <Skeleton className="w-3/4 h-10" />
+            <Skeleton className="w-1/4 h-6" />
+            <Skeleton className="w-full h-24" />
+            <div className="space-y-2">
+              <Skeleton className="w-16 h-4" />
+              <Skeleton className="w-32 h-10" />
+            </div>
+            <Skeleton className="w-full h-12" />
+            <Skeleton className="w-1/2 h-12" />
+          </div>
+        </div>
+      </main>
+    );
+  }
   if (!product) return <div className="text-center py-32 text-neutral-500">Product not found</div>;
 
   const handleAddToQuote = () => {
