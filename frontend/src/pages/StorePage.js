@@ -24,9 +24,12 @@ export default function StorePage() {
   const [sort, setSort] = useState("name_asc");
   const [stockFilter, setStockFilter] = useState("");
   const [mobileSidebar, setMobileSidebar] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   const fetchProducts = useCallback(async (p = 1, append = false) => {
-    setLoading(true);
+    if (append) setLoadingMore(true);
+    else setLoading(true);
     try {
       const params = { page: p, limit: 20, sort };
       if (selectedCategory) params.category = selectedCategory;
@@ -37,10 +40,12 @@ export default function StorePage() {
       setTotal(data.total);
       setTotalPages(data.total_pages);
       setPage(p);
+      setHasMore(p < data.total_pages);
     } catch (err) {
       console.error("Error fetching products:", err);
     } finally {
-      setLoading(false);
+      if (append) setLoadingMore(false);
+      else setLoading(false);
     }
   }, [selectedCategory, searchQuery, sort, stockFilter]);
 
@@ -61,6 +66,25 @@ export default function StorePage() {
   useEffect(() => {
     fetchProducts(1, false);
   }, [fetchProducts]);
+
+  // Infinite scroll with Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore && !loading) {
+          fetchProducts(page + 1, true);
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    const sentinel = document.getElementById('infinite-scroll-sentinel');
+    if (sentinel) observer.observe(sentinel);
+
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [hasMore, loadingMore, loading, page, fetchProducts]);
 
   const handleCategoryClick = (cat) => {
     setSelectedCategory(cat === selectedCategory ? "" : cat);
@@ -180,12 +204,16 @@ export default function StorePage() {
                   </div>
                 ))}
               </div>
-              {page < totalPages && (
-                <div className="flex justify-center mt-8">
-                  <Button variant="outline" onClick={() => fetchProducts(page + 1, true)} disabled={loading} data-testid="load-more-btn" className="px-8">
-                    {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    Load More Products
-                  </Button>
+              {/* Infinite scroll sentinel */}
+              <div id="infinite-scroll-sentinel" className="h-4" />
+              {loadingMore && (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-brand-primary" />
+                </div>
+              )}
+              {!hasMore && products.length > 0 && (
+                <div className="text-center py-8 text-neutral-400 text-sm">
+                  Showing all {total} products
                 </div>
               )}
             </>
