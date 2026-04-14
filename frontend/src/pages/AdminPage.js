@@ -202,7 +202,7 @@ function EditProductDialog({ product, onClose, onSave }) {
             <Label className="text-sm font-medium">Product Image</Label>
             <div className="mt-2 space-y-2">
               {imageUrl && (
-                <img src={imageUrl.startsWith('/') ? `${process.env.REACT_APP_BACKEND_URL}${imageUrl}` : imageUrl} alt="Product" className="w-32 h-32 object-contain border rounded-lg bg-neutral-50" />
+                <img src={imageUrl} alt="Product" className="w-32 h-32 object-contain border rounded-lg bg-neutral-50" />
               )}
               <div className="flex gap-2">
                 <Input

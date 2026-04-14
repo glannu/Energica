@@ -27,6 +27,9 @@ UPLOAD_DIR = ROOT_DIR / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(ROOT_DIR / "static")), name="static")
 
+# Get backend URL for absolute image URLs
+BACKEND_URL = os.environ.get('BACKEND_URL', 'http://localhost:8000')
+
 # Default no-image placeholder
 DEFAULT_IMAGE_URL = "https://via.placeholder.com/400x400?text=No+Image"
 
@@ -52,8 +55,8 @@ async def upload_image(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save image: {str(e)}")
     
-    # Return the URL
-    image_url = f"/static/uploads/{unique_filename}"
+    # Return the absolute URL
+    image_url = f"{BACKEND_URL}/static/uploads/{unique_filename}"
     return {"image_url": image_url}
 
 JWT_SECRET = os.environ.get('JWT_SECRET', 'fallback_secret')

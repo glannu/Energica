@@ -47,20 +47,20 @@
 ### 3. Deploy Backend
 1. Click **New** → **Web Service**
 2. **Connect Repository**: Connect your GitHub repository
-3. **Select Branch**: `main` or `master`
-4. **Root Directory**: `backend`
-5. **Runtime**: Python 3
-6. **Build Command**: `pip install -r requirements.txt`
-7. **Start Command**: `uvicorn server:app --host 0.0.0.0 --port $PORT`
+3. **Root Directory**: `backend`
+4. **Build Command**: Leave empty (Python auto-detect)
+5. **Start Command**: `uvicorn server:app --host 0.0.0.0 --port $PORT`
 
 ### 4. Configure Environment Variables (Render)
 Add these environment variables in Render dashboard:
 
 | Variable | Value |
 |----------|-------|
-| `MONGO_URL` | Your MongoDB Atlas connection string |
-| `DB_NAME` | `energica_store` |
-| `JWT_SECRET` | Generate secure secret: `python -c "import secrets; print(secrets.token_hex(32))"` |
+| `MONGO_URL` | Your MongoDB connection string |
+| `DB_NAME` | Your database name (e.g., `energica`) |
+| `JWT_SECRET` | A random secret key |
+| `CORS_ORIGINS` | `*` (for development) or your frontend URL |
+| `BACKEND_URL` | Your Render backend URL (e.g., `https://energica-backend.onrender.com`) |
 | `ADMIN_EMAIL` | `admin@energicasolutions.com` |
 | `ADMIN_PASSWORD` | Choose strong password |
 | `CORS_ORIGINS` | `https://your-frontend-url.vercel.app` (add after frontend is deployed) |
