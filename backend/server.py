@@ -1,10 +1,7 @@
 from dotenv import load_dotenv
 from pathlib import Path
-
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
-
-from fastapi import FastAPI, APIRouter, HTTPException, Request, Depends
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Depends, UploadFile, File
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
@@ -16,6 +13,7 @@ import jwt
 from datetime import datetime, timezone, timedelta
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
+import shutil
 
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
@@ -23,6 +21,40 @@ db = client[os.environ['DB_NAME']]
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
+
+# Create uploads directory and serve static files
+UPLOAD_DIR = ROOT_DIR / "static" / "uploads"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/static", StaticFiles(directory=str(ROOT_DIR / "static")), name="static")
+
+# Default no-image placeholder
+DEFAULT_IMAGE_URL = "https://via.placeholder.com/400x400?text=No+Image"
+
+# ─── IMAGE UPLOAD ENDPOINT ───
+@api_router.post("/upload-image")
+async def upload_image(file: UploadFile = File(...)):
+    """Upload an image and return its URL"""
+    # Validate file type
+    allowed_extensions = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+    file_ext = Path(file.filename).suffix.lower()
+    
+    if file_ext not in allowed_extensions:
+        raise HTTPException(status_code=400, detail=f"Invalid file type. Allowed: {', '.join(allowed_extensions)}")
+    
+    # Generate unique filename
+    unique_filename = f"{uuid.uuid4()}{file_ext}"
+    file_path = UPLOAD_DIR / unique_filename
+    
+    # Save file
+    try:
+        with file_path.open("wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save image: {str(e)}")
+    
+    # Return the URL
+    image_url = f"/static/uploads/{unique_filename}"
+    return {"image_url": image_url}
 
 JWT_SECRET = os.environ.get('JWT_SECRET', 'fallback_secret')
 JWT_ALGORITHM = "HS256"
@@ -68,6 +100,10 @@ class ProductCreate(BaseModel):
     applications: List[str] = []
     hsn_code: str = ""
     gst_rate: float = 18
+
+    def get_image_url(self):
+        """Return image_url or default if empty"""
+        return self.image_url if self.image_url else DEFAULT_IMAGE_URL
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
@@ -298,15 +334,15 @@ async def get_product(product_id: str):
     return product
 
 @api_router.post("/products")
-async def create_product(product: ProductCreate, admin=Depends(get_current_admin)):
-    doc = product.model_dump()
-    doc["id"] = str(uuid.uuid4())
-    doc["created_at"] = datetime.now(timezone.utc).isoformat()
-    if not doc["image_url"]:
-        doc["image_url"] = CATEGORY_IMAGES.get(doc["category"], "")
-    await db.products.insert_one(doc)
-    created = await db.products.find_one({"id": doc["id"]}, {"_id": 0})
-    return created
+async def create_product(product: ProductCreate, current_user = Depends(get_current_admin)):
+    new_product = product.dict()
+    # Use image_url or default
+    if not new_product.get("image_url"):
+        new_product["image_url"] = DEFAULT_IMAGE_URL
+    new_product["created_at"] = datetime.now(timezone.utc).isoformat()
+    result = await db.products.insert_one(new_product)
+    new_product["id"] = str(result.inserted_id)
+    return new_product
 
 @api_router.put("/products/{product_id}")
 async def update_product(product_id: str, update: ProductUpdate, admin=Depends(get_current_admin)):

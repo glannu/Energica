@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Search, Pencil, LogOut, Package, FileText } from "lucide-react";
+import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -160,11 +160,34 @@ function EditProductDialog({ product, onClose, onSave }) {
   const [stock, setStock] = useState(product.stock);
   const [inStock, setInStock] = useState(product.in_stock);
   const [name, setName] = useState(product.name);
+  const [imageUrl, setImageUrl] = useState(product.image_url || "");
+  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const { data } = await axios.post(`${API}/upload-image`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setImageUrl(data.image_url);
+      toast.success("Image uploaded successfully");
+    } catch (err) {
+      toast.error("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async () => {
     setSaving(true);
-    await onSave(product.id, { price: Number(price), stock: Number(stock), in_stock: inStock, name });
+    await onSave(product.id, { price: Number(price), stock: Number(stock), in_stock: inStock, name, image_url: imageUrl });
     setSaving(false);
   };
 
@@ -175,6 +198,36 @@ function EditProductDialog({ product, onClose, onSave }) {
           <DialogTitle className="font-heading">Edit Product</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-2">
+          <div>
+            <Label className="text-sm font-medium">Product Image</Label>
+            <div className="mt-2 space-y-2">
+              {imageUrl && (
+                <img src={imageUrl.startsWith('/') ? `${process.env.REACT_APP_BACKEND_URL}${imageUrl}` : imageUrl} alt="Product" className="w-32 h-32 object-contain border rounded-lg bg-neutral-50" />
+              )}
+              <div className="flex gap-2">
+                <Input
+                  data-testid="image-url-input"
+                  placeholder="Enter image URL or upload file"
+                  value={imageUrl}
+                  onChange={e => setImageUrl(e.target.value)}
+                  className="flex-1"
+                />
+                <label className="cursor-pointer">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    disabled={uploading}
+                  />
+                  <Button type="button" variant="outline" size="icon" disabled={uploading}>
+                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  </Button>
+                </label>
+              </div>
+              <p className="text-xs text-neutral-500">Upload image from local or paste URL from Drive/Cloud</p>
+            </div>
+          </div>
           <div>
             <Label className="text-sm font-medium">Name</Label>
             <Input data-testid="edit-name" value={name} onChange={e => setName(e.target.value)} className="mt-1" />
