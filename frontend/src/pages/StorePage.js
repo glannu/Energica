@@ -113,50 +113,50 @@ export default function StorePage() {
         <div className="bg-white rounded-xl border border-neutral-200 p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-heading font-semibold text-lg text-neutral-900">Browse by Category</h2>
-            {selectedCategory && (
-              <Button variant="ghost" size="sm" onClick={() => handleCategoryClick("")} className="text-brand-primary hover:text-brand-primary-hover">
-                <X className="h-4 w-4 mr-1" /> Clear
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="icon" onClick={() => scrollCategories('left')} className="flex-shrink-0">
+                <ChevronLeft className="h-4 w-4" />
               </Button>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" onClick={() => scrollCategories('left')} className="flex-shrink-0">
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <div ref={categoryScrollRef} className="flex-1 overflow-x-auto scrollbar-hide">
-              <div className="flex gap-3">
-                <button
-                  data-testid="category-filter-all"
-                  onClick={() => handleCategoryClick("")}
-                  className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${!selectedCategory ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
-                >
-                  <div className="w-20 h-20 rounded-lg bg-neutral-100 flex items-center justify-center mb-2">
-                    <SlidersHorizontal className="h-8 w-8 text-neutral-600" />
-                  </div>
-                  <span className="text-sm font-medium text-center">All Products</span>
-                </button>
-                {categories.map(cat => (
-                  <button
-                    key={cat.name}
-                    data-testid={`category-filter-${cat.name.toLowerCase().replace(/[\s&]+/g, '-')}`}
-                    onClick={() => handleCategoryClick(cat.name)}
-                    className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${selectedCategory === cat.name ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
-                  >
-                    {cat.image ? (
-                      <img src={cat.image} alt={cat.name} className="w-20 h-20 rounded-lg object-cover mb-2" />
-                    ) : (
-                      <div className="w-20 h-20 rounded-lg bg-neutral-100 flex items-center justify-center mb-2">
-                        <SlidersHorizontal className="h-8 w-8 text-neutral-400" />
-                      </div>
-                    )}
-                    <span className="text-sm font-medium text-center line-clamp-2 w-20">{cat.name}</span>
-                  </button>
-                ))}
-              </div>
+              <Button variant="outline" size="icon" onClick={() => scrollCategories('right')} className="flex-shrink-0">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              {selectedCategory && (
+                <Button variant="ghost" size="sm" onClick={() => handleCategoryClick("")} className="text-brand-primary hover:text-brand-primary-hover ml-2">
+                  <X className="h-4 w-4 mr-1" /> Clear
+                </Button>
+              )}
             </div>
-            <Button variant="outline" size="icon" onClick={() => scrollCategories('right')} className="flex-shrink-0">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+          </div>
+          <div ref={categoryScrollRef} className="overflow-x-auto scrollbar-hide">
+            <div className="flex gap-3 pb-2">
+              <button
+                data-testid="category-filter-all"
+                onClick={() => handleCategoryClick("")}
+                className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${!selectedCategory ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
+              >
+                <div className="w-20 h-20 rounded-lg bg-neutral-100 flex items-center justify-center mb-2">
+                  <SlidersHorizontal className="h-8 w-8 text-neutral-600" />
+                </div>
+                <span className="text-sm font-medium text-center">All Products</span>
+              </button>
+              {categories.map(cat => (
+                <button
+                  key={cat.name}
+                  data-testid={`category-filter-${cat.name.toLowerCase().replace(/[\s&]+/g, '-')}`}
+                  onClick={() => handleCategoryClick(cat.name)}
+                  className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${selectedCategory === cat.name ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
+                >
+                  {cat.image ? (
+                    <img src={cat.image} alt={cat.name} className="w-20 h-20 rounded-lg object-cover mb-2" />
+                  ) : (
+                    <div className="w-20 h-20 rounded-lg bg-neutral-100 flex items-center justify-center mb-2">
+                      <SlidersHorizontal className="h-8 w-8 text-neutral-400" />
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-center line-clamp-2 w-20">{cat.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
