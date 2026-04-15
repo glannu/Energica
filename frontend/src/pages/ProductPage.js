@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import { ChevronRight, Plus, Minus, Download, CheckCircle, XCircle, ArrowLeft, MessageCircle } from "lucide-react";
+import { ChevronRight, Plus, Minus, Download, CheckCircle, XCircle, ArrowLeft, MessageCircle, ChevronLeft, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -21,6 +21,8 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [similarProducts, setSimilarProducts] = useState([]);
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const [allMedia, setAllMedia] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -30,6 +32,19 @@ export default function ProductPage() {
 
       // Add to recently viewed
       addToRecentlyViewed(data);
+
+      // Build media gallery
+      const media = [];
+      if (data.images && data.images.length > 0) {
+        data.images.forEach(img => media.push({ type: 'image', url: img }));
+      } else if (data.image_url) {
+        media.push({ type: 'image', url: data.image_url });
+      }
+      if (data.videos && data.videos.length > 0) {
+        data.videos.forEach(vid => media.push({ type: 'video', url: vid }));
+      }
+      setAllMedia(media);
+      setCurrentMediaIndex(0);
 
       // If similar products not provided by backend, fetch by category
       if (!data.similar_products || data.similar_products.length === 0) {
@@ -94,6 +109,18 @@ export default function ProductPage() {
     toast.info("Datasheet request sent via WhatsApp");
   };
 
+  const handlePreviousMedia = () => {
+    setCurrentMediaIndex((prev) => (prev === 0 ? allMedia.length - 1 : prev - 1));
+  };
+
+  const handleNextMedia = () => {
+    setCurrentMediaIndex((prev) => (prev === allMedia.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleMediaClick = (index) => {
+    setCurrentMediaIndex(index);
+  };
+
   return (
     <main className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Breadcrumb */}
@@ -106,9 +133,62 @@ export default function ProductPage() {
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 mb-16">
-        {/* Image */}
-        <div className="bg-neutral-50 rounded-2xl p-4 sm:p-8 flex items-center justify-center border border-neutral-100 aspect-square lg:aspect-auto lg:min-h-[400px]" data-testid="product-image-container">
-          <img src={product.image_url} alt={product.name} className="max-h-60 sm:max-h-80 max-w-full object-contain" />
+        {/* Image Gallery */}
+        <div className="space-y-3">
+          <div className="bg-neutral-50 rounded-2xl p-4 sm:p-8 flex items-center justify-center border border-neutral-100 aspect-square lg:aspect-auto lg:min-h-[400px] relative" data-testid="product-image-container">
+            {allMedia.length > 1 && (
+              <>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-white shadow-md z-10"
+                  onClick={handlePreviousMedia}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-white shadow-md z-10"
+                  onClick={handleNextMedia}
+                >
+                  <ChevronRightIcon className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+            {allMedia[currentMediaIndex]?.type === 'video' ? (
+              <video
+                src={allMedia[currentMediaIndex].url}
+                controls
+                className="max-h-60 sm:max-h-80 max-w-full object-contain"
+              />
+            ) : (
+              <img
+                src={allMedia[currentMediaIndex]?.url || product.image_url}
+                alt={product.name}
+                className="max-h-60 sm:max-h-80 max-w-full object-contain"
+              />
+            )}
+          </div>
+          {allMedia.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {allMedia.map((media, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleMediaClick(index)}
+                  className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 ${
+                    currentMediaIndex === index ? 'border-brand-primary' : 'border-neutral-200'
+                  }`}
+                >
+                  {media.type === 'video' ? (
+                    <video src={media.url} className="w-full h-full object-cover" />
+                  ) : (
+                    <img src={media.url} alt={`Media ${index + 1}`} className="w-full h-full object-cover" />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Details */}

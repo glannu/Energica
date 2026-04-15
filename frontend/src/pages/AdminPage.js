@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon } from "lucide-react";
+import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon, Download, FileSpreadsheet } from "lucide-react";
 import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -71,6 +71,9 @@ function ProductsTab() {
   const [editProduct, setEditProduct] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [importing, setImporting] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const fileInputRef = useRef(null);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -95,6 +98,56 @@ function ProductsTab() {
     } catch (err) { toast.error("Update failed"); }
   };
 
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const response = await axios.get(`${API}/products/bulk-export`, {
+        headers: getAuthHeaders(),
+        responseType: 'blob'
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'products_export.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      toast.success("Products exported successfully");
+    } catch (err) {
+      toast.error("Export failed");
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleImport = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImporting(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const { data } = await axios.post(`${API}/products/bulk-import`, formData, {
+        headers: { ...getAuthHeaders(), 'Content-Type': 'multipart/form-data' }
+      });
+      toast.success(`Import completed: ${data.created} created, ${data.updated} updated`);
+      if (data.errors.length > 0) {
+        toast.warning(`${data.errors.length} errors occurred. Check console for details.`);
+        console.error("Import errors:", data.errors);
+      }
+      fetchProducts();
+    } catch (err) {
+      toast.error("Import failed");
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center gap-3 mb-4">
@@ -102,6 +155,21 @@ function ProductsTab() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
           <Input data-testid="admin-product-search" placeholder="Search products..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-10" />
         </div>
+        <Button variant="outline" onClick={handleExport} disabled={exporting}>
+          {exporting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Download className="h-4 w-4 mr-2" />}
+          Export
+        </Button>
+        <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={importing}>
+          {importing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <FileSpreadsheet className="h-4 w-4 mr-2" />}
+          Import
+        </Button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImport}
+          accept=".csv,.xlsx,.xls"
+          className="hidden"
+        />
       </div>
 
       {loading ? (
@@ -161,9 +229,13 @@ function EditProductDialog({ product, onClose, onSave }) {
   const [inStock, setInStock] = useState(product.in_stock);
   const [name, setName] = useState(product.name);
   const [imageUrl, setImageUrl] = useState(product.image_url || "");
+  const [images, setImages] = useState(product.images || []);
+  const [videos, setVideos] = useState(product.videos || []);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef(null);
+  const imagesInputRef = useRef(null);
+  const videosInputRef = useRef(null);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -186,13 +258,81 @@ function EditProductDialog({ product, onClose, onSave }) {
     }
   };
 
+  const handleMultipleImageUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    const uploadedUrls = [];
+
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const { data } = await axios.post(`${API}/upload-image`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        uploadedUrls.push(data.image_url);
+      } catch (err) {
+        console.error("Failed to upload image:", err);
+      }
+    }
+
+    setImages([...images, ...uploadedUrls]);
+    toast.success(`${uploadedUrls.length} images uploaded successfully`);
+    setUploading(false);
+    if (imagesInputRef.current) {
+      imagesInputRef.current.value = '';
+    }
+  };
+
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const { data } = await axios.post(`${API}/upload-image`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setVideos([...videos, data.image_url]);
+      toast.success("Video uploaded successfully");
+    } catch (err) {
+      toast.error("Failed to upload video");
+    } finally {
+      setUploading(false);
+      if (videosInputRef.current) {
+        videosInputRef.current.value = '';
+      }
+    }
+  };
+
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
+  const handleRemoveImage = (index) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveVideo = (index) => {
+    setVideos(videos.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async () => {
     setSaving(true);
-    await onSave(product.id, { price: Number(price), stock: Number(stock), in_stock: inStock, name, image_url: imageUrl });
+    await onSave(product.id, { 
+      price: Number(price), 
+      stock: Number(stock), 
+      in_stock: inStock, 
+      name, 
+      image_url: imageUrl,
+      images,
+      videos
+    });
     setSaving(false);
   };
 
@@ -202,7 +342,7 @@ function EditProductDialog({ product, onClose, onSave }) {
         <DialogHeader>
           <DialogTitle className="font-heading">Edit Product</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4 py-2">
+        <div className="space-y-4 py-2 max-h-[70vh] overflow-y-auto">
           <div>
             <Label className="text-sm font-medium">Product Image</Label>
             <div className="mt-2 space-y-2">
@@ -230,6 +370,89 @@ function EditProductDialog({ product, onClose, onSave }) {
                 </Button>
               </div>
               <p className="text-xs text-neutral-500">Upload image from local or paste URL from Drive/Cloud</p>
+            </div>
+          </div>
+          <div>
+            <Label className="text-sm font-medium">Additional Images</Label>
+            <div className="mt-2 space-y-2">
+              {images.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {images.map((img, idx) => (
+                    <div key={idx} className="relative group">
+                      <img src={img} alt={`Image ${idx + 1}`} className="w-16 h-16 object-cover rounded-lg border" />
+                      <button
+                        onClick={() => handleRemoveImage(idx)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleMultipleImageUpload}
+                  className="hidden"
+                  disabled={uploading}
+                  ref={imagesInputRef}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => imagesInputRef.current?.click()}
+                  disabled={uploading}
+                  className="w-full"
+                >
+                  {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
+                  Upload Multiple Images
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <Label className="text-sm font-medium">Videos</Label>
+            <div className="mt-2 space-y-2">
+              {videos.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {videos.map((vid, idx) => (
+                    <div key={idx} className="relative group">
+                      <video src={vid} className="w-16 h-16 object-cover rounded-lg border" />
+                      <button
+                        onClick={() => handleRemoveVideo(idx)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Input
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoUpload}
+                  className="hidden"
+                  disabled={uploading}
+                  ref={videosInputRef}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => videosInputRef.current?.click()}
+                  disabled={uploading}
+                  className="w-full"
+                >
+                  {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
+                  Upload Video
+                </Button>
+              </div>
             </div>
           </div>
           <div>

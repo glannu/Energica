@@ -18,6 +18,8 @@ from datetime import datetime, timezone, timedelta
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 import shutil
+import pandas as pd
+import io
 
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
@@ -102,6 +104,8 @@ class ProductCreate(BaseModel):
     stock: int = 0
     in_stock: bool = True
     image_url: str = ""
+    images: List[str] = []
+    videos: List[str] = []
     features: List[str] = []
     specs: Dict[str, str] = {}
     applications: List[str] = []
@@ -111,6 +115,12 @@ class ProductCreate(BaseModel):
     def get_image_url(self):
         """Return image_url or default if empty"""
         return self.image_url if self.image_url else DEFAULT_IMAGE_URL
+
+    def get_images(self):
+        """Return images list or single image_url as list"""
+        if self.images:
+            return self.images
+        return [self.image_url] if self.image_url else [DEFAULT_IMAGE_URL]
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
@@ -122,6 +132,8 @@ class ProductUpdate(BaseModel):
     stock: Optional[int] = None
     in_stock: Optional[bool] = None
     image_url: Optional[str] = None
+    images: Optional[List[str]] = None
+    videos: Optional[List[str]] = None
     features: Optional[List[str]] = None
     specs: Optional[Dict[str, str]] = None
     applications: Optional[List[str]] = None
@@ -367,6 +379,121 @@ async def delete_product(product_id: str, admin=Depends(get_current_admin)):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Product not found")
     return {"message": "Product deleted"}
+
+# ─── BULK IMPORT/EXPORT ───
+@api_router.post("/products/bulk-import")
+async def bulk_import_products(file: UploadFile = File(...), admin=Depends(get_current_admin)):
+    """Import products from Excel/CSV file"""
+    try:
+        # Read file content
+        content = await file.read()
+        
+        # Determine file type and read accordingly
+        if file.filename.endswith('.csv'):
+            df = pd.read_csv(io.BytesIO(content))
+        elif file.filename.endswith(('.xlsx', '.xls')):
+            df = pd.read_excel(io.BytesIO(content))
+        else:
+            raise HTTPException(status_code=400, detail="Unsupported file type. Use CSV or Excel.")
+        
+        # Convert to list of dictionaries
+        products_data = df.to_dict('records')
+        
+        # Process each product
+        results = {"created": 0, "updated": 0, "errors": []}
+        
+        for row in products_data:
+            try:
+                # Map Excel columns to product fields
+                product_data = {
+                    "name": str(row.get("name", row.get("Name", ""))).strip(),
+                    "item_code": str(row.get("item_code", row.get("Item Code", row.get("Item Code", "")))).strip(),
+                    "category": str(row.get("category", row.get("Category", ""))).strip(),
+                    "description": str(row.get("description", row.get("Description", ""))).strip(),
+                    "price": float(row.get("price", row.get("Price", 0))),
+                    "uom": str(row.get("uom", row.get("UOM", "Nos"))).strip(),
+                    "moq": int(row.get("moq", row.get("MOQ", 1))),
+                    "stock": int(row.get("stock", row.get("Stock", 0))),
+                    "in_stock": bool(row.get("in_stock", row.get("In Stock", True))),
+                    "image_url": str(row.get("image_url", row.get("Image URL", ""))).strip(),
+                    "images": str(row.get("images", row.get("Images", ""))).strip().split(",") if row.get("images") or row.get("Images") else [],
+                    "videos": str(row.get("videos", row.get("Videos", ""))).strip().split(",") if row.get("videos") or row.get("Videos") else [],
+                    "features": str(row.get("features", row.get("Features", ""))).strip().split(",") if row.get("features") or row.get("Features") else [],
+                    "hsn_code": str(row.get("hsn_code", row.get("HSN Code", ""))).strip(),
+                    "gst_rate": float(row.get("gst_rate", row.get("GST Rate", 18))),
+                    "specs": {},
+                    "applications": []
+                }
+                
+                # Check if product exists by item_code
+                existing = await db.products.find_one({"item_code": product_data["item_code"]})
+                
+                if existing:
+                    # Update existing product
+                    update_data = {k: v for k, v in product_data.items() if v not in [[], "", {}]}
+                    await db.products.update_one(
+                        {"item_code": product_data["item_code"]},
+                        {"$set": update_data}
+                    )
+                    results["updated"] += 1
+                else:
+                    # Create new product
+                    product_data["id"] = str(uuid.uuid4())
+                    product_data["created_at"] = datetime.now(timezone.utc).isoformat()
+                    await db.products.insert_one(product_data)
+                    results["created"] += 1
+                    
+            except Exception as e:
+                results["errors"].append(f"Row {results['created'] + results['updated'] + len(results['errors']) + 1}: {str(e)}")
+                continue
+        
+        return results
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Import failed: {str(e)}")
+
+@api_router.get("/products/bulk-export")
+async def bulk_export_products(admin=Depends(get_current_admin)):
+    """Export all products to Excel file"""
+    try:
+        # Fetch all products
+        products = await db.products.find({}, {"_id": 0}).to_list(None)
+        
+        # Convert to DataFrame
+        df = pd.DataFrame(products)
+        
+        # Select and reorder columns
+        columns = [
+            "name", "item_code", "category", "description", "price", "uom",
+            "moq", "stock", "in_stock", "image_url", "images", "videos",
+            "features", "hsn_code", "gst_rate"
+        ]
+        
+        # Filter to only available columns
+        available_columns = [col for col in columns if col in df.columns]
+        df = df[available_columns]
+        
+        # Convert lists to comma-separated strings
+        for col in ["images", "videos", "features"]:
+            if col in df.columns:
+                df[col] = df[col].apply(lambda x: ",".join(x) if isinstance(x, list) else str(x))
+        
+        # Create Excel file in memory
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Products')
+        
+        output.seek(0)
+        
+        from fastapi.responses import Response
+        return Response(
+            content=output.getvalue(),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": "attachment; filename=products_export.xlsx"}
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
 
 # ─── CATEGORIES ───
 @api_router.get("/categories")
