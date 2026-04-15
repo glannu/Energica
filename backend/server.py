@@ -6,6 +6,7 @@ load_dotenv(ROOT_DIR / '.env')
 
 from fastapi import FastAPI, APIRouter, HTTPException, Request, Depends, UploadFile, File
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import Response
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
@@ -111,6 +112,8 @@ class ProductCreate(BaseModel):
     applications: List[str] = []
     hsn_code: str = ""
     gst_rate: float = 18
+    deleted: bool = False
+    deleted_at: Optional[str] = None
 
     def get_image_url(self):
         """Return image_url or default if empty"""
@@ -137,6 +140,8 @@ class ProductUpdate(BaseModel):
     features: Optional[List[str]] = None
     specs: Optional[Dict[str, str]] = None
     applications: Optional[List[str]] = None
+    deleted: Optional[bool] = None
+    deleted_at: Optional[str] = None
 
 class RFQCreate(BaseModel):
     items: List[Dict[str, Any]]
@@ -321,8 +326,10 @@ async def get_me(admin=Depends(get_current_admin)):
 
 # ─── PRODUCT ENDPOINTS ───
 @api_router.get("/products")
-async def list_products(category: str = None, search: str = None, sort: str = None, page: int = 1, limit: int = 20, in_stock: str = None):
+async def list_products(category: str = None, search: str = None, sort: str = None, page: int = 1, limit: int = 20, in_stock: str = None, include_deleted: bool = False):
     query = {}
+    if not include_deleted:
+        query["deleted"] = {"$ne": True}
     if category:
         query["category"] = category
     if search:
@@ -374,11 +381,21 @@ async def update_product(product_id: str, update: ProductUpdate, admin=Depends(g
     return await db.products.find_one({"id": product_id}, {"_id": 0})
 
 @api_router.delete("/products/{product_id}")
-async def delete_product(product_id: str, admin=Depends(get_current_admin)):
-    result = await db.products.delete_one({"id": product_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Product not found")
-    return {"message": "Product deleted"}
+async def delete_product(product_id: str, permanent: bool = False, admin=Depends(get_current_admin)):
+    """Delete product (soft delete by default, set permanent=true for permanent deletion)"""
+    if permanent:
+        result = await db.products.delete_one({"id": product_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Product not found")
+        return {"message": "Product permanently deleted"}
+    else:
+        result = await db.products.update_one(
+            {"id": product_id},
+            {"$set": {"deleted": True, "deleted_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Product not found")
+        return {"message": "Product soft deleted"}
 
 # ─── BULK IMPORT/EXPORT ───
 @api_router.post("/products/bulk-import")
@@ -422,7 +439,9 @@ async def bulk_import_products(file: UploadFile = File(...), admin=Depends(get_c
                     "hsn_code": str(row.get("hsn_code", row.get("HSN Code", ""))).strip(),
                     "gst_rate": float(row.get("gst_rate", row.get("GST Rate", 18))),
                     "specs": {},
-                    "applications": []
+                    "applications": [],
+                    "deleted": bool(row.get("deleted", row.get("Deleted", False))),
+                    "deleted_at": str(row.get("deleted_at", row.get("Deleted At", ""))).strip() if row.get("deleted_at") or row.get("Deleted At") else None
                 }
                 
                 # Check if product exists by item_code
@@ -466,7 +485,7 @@ async def bulk_export_products(admin=Depends(get_current_admin)):
         columns = [
             "name", "item_code", "category", "description", "price", "uom",
             "moq", "stock", "in_stock", "image_url", "images", "videos",
-            "features", "hsn_code", "gst_rate"
+            "features", "hsn_code", "gst_rate", "deleted", "deleted_at"
         ]
         
         # Filter to only available columns
@@ -484,8 +503,7 @@ async def bulk_export_products(admin=Depends(get_current_admin)):
             df.to_excel(writer, index=False, sheet_name='Products')
         
         output.seek(0)
-        
-        from fastapi.responses import Response
+
         return Response(
             content=output.getvalue(),
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

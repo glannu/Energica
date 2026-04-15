@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon, Download, FileSpreadsheet } from "lucide-react";
+import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon, Download, FileSpreadsheet, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -69,10 +69,12 @@ function ProductsTab() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [editProduct, setEditProduct] = useState(null);
+  const [deleteProduct, setDeleteProduct] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const fileInputRef = useRef(null);
 
   const fetchProducts = useCallback(async () => {
@@ -96,6 +98,18 @@ function ProductsTab() {
       setEditProduct(null);
       fetchProducts();
     } catch (err) { toast.error("Update failed"); }
+  };
+
+  const handleDelete = async (permanent = false) => {
+    if (!deleteProduct) return;
+    setDeleting(true);
+    try {
+      await axios.delete(`${API}/products/${deleteProduct.id}?permanent=${permanent}`, { headers: getAuthHeaders() });
+      toast.success(permanent ? "Product permanently deleted" : "Product soft deleted");
+      setDeleteProduct(null);
+      fetchProducts();
+    } catch (err) { toast.error("Delete failed"); }
+    finally { setDeleting(false); }
   };
 
   const handleExport = async () => {
@@ -203,7 +217,10 @@ function ProductsTab() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-center">
-                      <Button variant="ghost" size="sm" onClick={() => setEditProduct(p)} data-testid={`edit-btn-${p.item_code}`}><Pencil className="h-3 w-3" /></Button>
+                      <div className="flex justify-center gap-1">
+                        <Button variant="ghost" size="sm" onClick={() => setEditProduct(p)} data-testid={`edit-btn-${p.item_code}`}><Pencil className="h-3 w-3" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => setDeleteProduct(p)} data-testid={`delete-btn-${p.item_code}`}><Trash2 className="h-3 w-3 text-red-500" /></Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -219,6 +236,48 @@ function ProductsTab() {
       )}
 
       {editProduct && <EditProductDialog product={editProduct} onClose={() => setEditProduct(null)} onSave={handleSave} />}
+      {deleteProduct && (
+        <Dialog open onOpenChange={() => setDeleteProduct(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Product</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <p className="text-sm text-neutral-600">
+                Are you sure you want to delete <strong>{deleteProduct.name}</strong>?
+              </p>
+              <div className="mt-4 space-y-2">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleDelete(false)}
+                  disabled={deleting}
+                >
+                  {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                  Soft Delete (Can be restored)
+                </Button>
+                <Button
+                  variant="destructive"
+                  className="w-full"
+                  onClick={() => handleDelete(true)}
+                  disabled={deleting}
+                >
+                  {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                  Permanent Delete (Cannot be restored)
+                </Button>
+              </div>
+              <p className="text-xs text-neutral-500 mt-4">
+                <strong>Soft Delete:</strong> Marks product as deleted but keeps it in database. Can be restored by setting deleted=false in import.
+                <br />
+                <strong>Permanent Delete:</strong> Removes product from database completely.
+              </p>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDeleteProduct(null)}>Cancel</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

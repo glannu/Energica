@@ -33,15 +33,24 @@ export default function ProductPage() {
       // Add to recently viewed
       addToRecentlyViewed(data);
 
-      // Build media gallery
+      // Build media gallery - always include image_url first if it exists
       const media = [];
-      if (data.images && data.images.length > 0) {
-        data.images.forEach(img => media.push({ type: 'image', url: img }));
-      } else if (data.image_url) {
+      if (data.image_url && data.image_url.trim()) {
         media.push({ type: 'image', url: data.image_url });
       }
+      if (data.images && data.images.length > 0) {
+        data.images.forEach(img => {
+          if (img && img.trim() && img !== data.image_url) {
+            media.push({ type: 'image', url: img });
+          }
+        });
+      }
       if (data.videos && data.videos.length > 0) {
-        data.videos.forEach(vid => media.push({ type: 'video', url: vid }));
+        data.videos.forEach(vid => {
+          if (vid && vid.trim()) {
+            media.push({ type: 'video', url: vid });
+          }
+        });
       }
       setAllMedia(media);
       setCurrentMediaIndex(0);
