@@ -350,15 +350,6 @@ async def list_products(category: str = None, search: str = None, sort: str = No
     products = await db.products.find(query, {"_id": 0}).sort(sort_field).skip(skip).limit(limit).to_list(limit)
     return {"products": products, "total": total, "page": page, "limit": limit, "total_pages": max(1, (total + limit - 1) // limit)}
 
-@api_router.get("/products/{product_id}")
-async def get_product(product_id: str):
-    product = await db.products.find_one({"id": product_id}, {"_id": 0})
-    if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
-    similar = await db.products.find({"category": product["category"], "id": {"$ne": product_id}}, {"_id": 0}).limit(4).to_list(4)
-    product["similar_products"] = similar
-    return product
-
 @api_router.post("/products")
 async def create_product(product: ProductCreate, current_user = Depends(get_current_admin)):
     new_product = product.dict()
@@ -369,6 +360,62 @@ async def create_product(product: ProductCreate, current_user = Depends(get_curr
     result = await db.products.insert_one(new_product)
     new_product["id"] = str(result.inserted_id)
     return new_product
+
+@api_router.get("/products/bulk-export")
+async def bulk_export_products(admin=Depends(get_current_admin)):
+    """Export all products to Excel file"""
+    try:
+        # Fetch all products
+        products = await db.products.find({}, {"_id": 0}).to_list(None)
+        logging.info(f"Fetched {len(products)} products for export")
+        
+        # Convert to DataFrame
+        df = pd.DataFrame(products)
+        logging.info(f"Created DataFrame with shape: {df.shape}")
+        
+        # Select and reorder columns
+        columns = [
+            "name", "item_code", "category", "description", "price", "uom",
+            "moq", "stock", "in_stock", "image_url", "images", "videos",
+            "features", "hsn_code", "gst_rate", "deleted", "deleted_at"
+        ]
+        
+        # Filter to only available columns
+        available_columns = [col for col in columns if col in df.columns]
+        df = df[available_columns]
+        logging.info(f"Selected columns: {available_columns}")
+        
+        # Convert lists to comma-separated strings
+        for col in ["images", "videos", "features"]:
+            if col in df.columns:
+                df[col] = df[col].apply(lambda x: ",".join(x) if isinstance(x, list) else str(x))
+        
+        # Create Excel file in memory
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Products')
+        
+        output.seek(0)
+        logging.info("Excel file created successfully")
+
+        return Response(
+            content=output.getvalue(),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": "attachment; filename=products_export.xlsx"}
+        )
+        
+    except Exception as e:
+        logging.error(f"Export failed: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
+
+@api_router.get("/products/{product_id}")
+async def get_product(product_id: str):
+    product = await db.products.find_one({"id": product_id}, {"_id": 0})
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    similar = await db.products.find({"category": product["category"], "id": {"$ne": product_id}}, {"_id": 0}).limit(4).to_list(4)
+    product["similar_products"] = similar
+    return product
 
 @api_router.put("/products/{product_id}")
 async def update_product(product_id: str, update: ProductUpdate, admin=Depends(get_current_admin)):
@@ -470,53 +517,6 @@ async def bulk_import_products(file: UploadFile = File(...), admin=Depends(get_c
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Import failed: {str(e)}")
-
-@api_router.get("/products/bulk-export")
-async def bulk_export_products(admin=Depends(get_current_admin)):
-    """Export all products to Excel file"""
-    try:
-        # Fetch all products
-        products = await db.products.find({}, {"_id": 0}).to_list(None)
-        logging.info(f"Fetched {len(products)} products for export")
-        
-        # Convert to DataFrame
-        df = pd.DataFrame(products)
-        logging.info(f"Created DataFrame with shape: {df.shape}")
-        
-        # Select and reorder columns
-        columns = [
-            "name", "item_code", "category", "description", "price", "uom",
-            "moq", "stock", "in_stock", "image_url", "images", "videos",
-            "features", "hsn_code", "gst_rate", "deleted", "deleted_at"
-        ]
-        
-        # Filter to only available columns
-        available_columns = [col for col in columns if col in df.columns]
-        df = df[available_columns]
-        logging.info(f"Selected columns: {available_columns}")
-        
-        # Convert lists to comma-separated strings
-        for col in ["images", "videos", "features"]:
-            if col in df.columns:
-                df[col] = df[col].apply(lambda x: ",".join(x) if isinstance(x, list) else str(x))
-        
-        # Create Excel file in memory
-        output = io.BytesIO()
-        with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False, sheet_name='Products')
-        
-        output.seek(0)
-        logging.info("Excel file created successfully")
-
-        return Response(
-            content=output.getvalue(),
-            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": "attachment; filename=products_export.xlsx"}
-        )
-        
-    except Exception as e:
-        logging.error(f"Export failed: {str(e)}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
 
 # ─── CATEGORIES ───
 @api_router.get("/categories")
