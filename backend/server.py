@@ -477,9 +477,11 @@ async def bulk_export_products(admin=Depends(get_current_admin)):
     try:
         # Fetch all products
         products = await db.products.find({}, {"_id": 0}).to_list(None)
+        logging.info(f"Fetched {len(products)} products for export")
         
         # Convert to DataFrame
         df = pd.DataFrame(products)
+        logging.info(f"Created DataFrame with shape: {df.shape}")
         
         # Select and reorder columns
         columns = [
@@ -491,6 +493,7 @@ async def bulk_export_products(admin=Depends(get_current_admin)):
         # Filter to only available columns
         available_columns = [col for col in columns if col in df.columns]
         df = df[available_columns]
+        logging.info(f"Selected columns: {available_columns}")
         
         # Convert lists to comma-separated strings
         for col in ["images", "videos", "features"]:
@@ -503,6 +506,7 @@ async def bulk_export_products(admin=Depends(get_current_admin)):
             df.to_excel(writer, index=False, sheet_name='Products')
         
         output.seek(0)
+        logging.info("Excel file created successfully")
 
         return Response(
             content=output.getvalue(),
@@ -511,6 +515,7 @@ async def bulk_export_products(admin=Depends(get_current_admin)):
         )
         
     except Exception as e:
+        logging.error(f"Export failed: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
 
 # ─── CATEGORIES ───

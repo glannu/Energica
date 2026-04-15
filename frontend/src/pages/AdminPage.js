@@ -128,7 +128,9 @@ function ProductsTab() {
       link.remove();
       toast.success("Products exported successfully");
     } catch (err) {
-      toast.error("Export failed");
+      console.error("Export error:", err);
+      const errorMessage = err.response?.data?.detail || err.message || "Export failed";
+      toast.error(errorMessage);
     } finally {
       setExporting(false);
     }
