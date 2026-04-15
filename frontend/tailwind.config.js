@@ -10,8 +10,8 @@ module.exports = {
             },
             colors: {
                 brand: {
-                    primary: '#EA580C',
-                    'primary-hover': '#C2410C',
+                    primary: '#DC2626',
+                    'primary-hover': '#B91C1C',
                     secondary: '#0369A1',
                     whatsapp: '#16A34A',
                     'whatsapp-hover': '#15803D',
