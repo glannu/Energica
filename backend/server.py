@@ -73,20 +73,20 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 CATEGORY_IMAGES = {
-    "Solar Panel": "https://images.unsplash.com/photo-1770810416523-bf40d844a248?w=400&q=80",
-    "Inverter": "https://images.unsplash.com/photo-1544350224-c6190ca2a967?w=400&q=80",
-    "Hybrid Inverter": "https://images.unsplash.com/photo-1544350224-c6190ca2a967?w=400&q=80",
-    "Off Grid Inverter": "https://images.unsplash.com/photo-1544350224-c6190ca2a967?w=400&q=80",
-    "Micro Inverter": "https://images.unsplash.com/photo-1544350224-c6190ca2a967?w=400&q=80",
-    "Battery": "https://images.unsplash.com/photo-1581244249923-172ef5029576?w=400&q=80",
-    "Wire & Cable": "https://images.unsplash.com/photo-1758965364875-e090e5423d2d?w=400&q=80",
-    "Connector": "https://images.unsplash.com/photo-1758965364875-e090e5423d2d?w=400&q=80",
-    "Distribution Box": "https://images.unsplash.com/photo-1544350224-c6190ca2a967?w=400&q=80",
-    "Earthing": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=80",
-    "Lightning": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=80",
+    "Solar Panel": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&q=80",
+    "Inverter": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&q=80",
+    "Hybrid Inverter": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&q=80",
+    "Off Grid Inverter": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&q=80",
+    "Micro Inverter": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&q=80",
+    "Battery": "https://images.unsplash.com/photo-1625235487714-8b882752e7e6?w=400&q=80",
+    "Wire & Cable": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+    "Connector": "https://images.unsplash.com/photo-1581092921461-eab62e97a782?w=400&q=80",
+    "Distribution Box": "https://images.unsplash.com/photo-1563770095-39d468f95c83?w=400&q=80",
+    "Earthing": "https://images.unsplash.com/photo-1563770095-39d468f95c83?w=400&q=80",
+    "Lightning": "https://images.unsplash.com/photo-1516961642265-531546e84af2?w=400&q=80",
     "Structure": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=80",
-    "PPE": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=80",
-    "Meter": "https://images.unsplash.com/photo-1544350224-c6190ca2a967?w=400&q=80",
+    "PPE": "https://images.unsplash.com/photo-1565725087973-4c2b8c0e1c63?w=400&q=80",
+    "Meter": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
 }
 
 # ─── MODELS ───
