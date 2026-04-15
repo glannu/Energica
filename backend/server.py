@@ -80,12 +80,12 @@ CATEGORY_IMAGES = {
     "Micro Inverter": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80",
     "Battery": "https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=400&q=80",
     "Wire & Cable": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80",
-    "Connector": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80",
+    "Connector": "https://images.unsplash.com/photo-1581092921461-eab62e97a782?w=400&q=80",
     "Distribution Box": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&q=80",
     "Earthing": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=80",
     "Lightning": "https://images.unsplash.com/photo-1516961642265-531546e84af2?w=400&q=80",
     "Structure": "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80",
-    "PPE": "https://images.unsplash.com/photo-1565725087973-4c2b8c0e1c63?w=400&q=80",
+    "PPE": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&q=80",
     "Meter": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
 }
 
