@@ -145,26 +145,6 @@ export default function ProductPage() {
         {/* Image Gallery */}
         <div className="space-y-3">
           <div className="bg-neutral-50 rounded-2xl p-4 sm:p-8 flex items-center justify-center border border-neutral-100 aspect-square lg:aspect-auto lg:min-h-[400px] relative" data-testid="product-image-container">
-            {allMedia.length > 1 && (
-              <>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-white shadow-md z-10"
-                  onClick={handlePreviousMedia}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-white shadow-md z-10"
-                  onClick={handleNextMedia}
-                >
-                  <ChevronRightIcon className="h-4 w-4" />
-                </Button>
-              </>
-            )}
             {allMedia[currentMediaIndex]?.type === 'video' ? (
               <video
                 src={allMedia[currentMediaIndex].url}
