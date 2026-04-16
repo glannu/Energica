@@ -26,6 +26,47 @@ export default function StorePage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const categoryScrollRef = useRef(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [
+    {
+      image: "https://images.unsplash.com/photo-1726795867801-63c0a37b80c6?w=1200&q=80",
+      title: "Energica Solutions Store",
+      description: "Your trusted partner for premium solar PV system components & BOS materials. Powering solar projects, end-to-end.",
+      badge: "Welcome"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=1200&q=80",
+      title: "Bulk & Bundle Deals",
+      description: "Save more with our bulk purchase options! Complete solar kits and bundle packages available at wholesale prices. Perfect for contractors and large projects.",
+      badge: "Bulk Savings"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&q=80",
+      title: "Best Price Guarantee",
+      description: "Single items at lowest prices with additional discounts on whole purchases. Get premium quality components at unbeatable rates.",
+      badge: "Best Prices"
+    }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
 
   const scrollCategories = (direction) => {
     if (categoryScrollRef.current) {
@@ -99,12 +140,42 @@ export default function StorePage() {
 
   return (
     <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* Hero Banner */}
+      {/* Hero Banner Carousel */}
       <div data-testid="store-hero" className="relative rounded-2xl overflow-hidden mb-8 bg-gradient-to-r from-neutral-900 to-neutral-800" style={{ minHeight: '200px' }}>
-        <img src="https://images.unsplash.com/photo-1726795867801-63c0a37b80c6?w=1200&q=80" alt="Solar" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+        <img src={slides[currentSlide].image} alt={slides[currentSlide].title} className="absolute inset-0 w-full h-full object-cover opacity-40" />
         <div className="relative z-10 p-8 sm:p-12 flex flex-col justify-center" style={{ minHeight: '200px' }}>
-          <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-3">Energica Solutions Store</h1>
-          <p className="text-neutral-300 text-base sm:text-lg max-w-xl">Your trusted partner for premium solar PV system components & BOS materials. Powering solar projects, end-to-end.</p>
+          <Badge className="w-fit mb-3 bg-brand-primary hover:bg-brand-primary-hover">{slides[currentSlide].badge}</Badge>
+          <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-3">{slides[currentSlide].title}</h1>
+          <p className="text-neutral-300 text-base sm:text-lg max-w-xl">{slides[currentSlide].description}</p>
+        </div>
+
+        {/* Navigation Arrows */}
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-md z-20"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-md z-20"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+
+        {/* Dots Navigation */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-2 h-2 rounded-full transition-all ${currentSlide === index ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/70'}`}
+            />
+          ))}
         </div>
       </div>
 
