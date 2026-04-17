@@ -30,10 +30,10 @@ export default function StorePage() {
 
   const slides = [
     {
-      image: "https://images.unsplash.com/photo-1726795867801-63c0a37b80c6?w=1200&q=80",
-      title: "Energica Solutions Store",
-      description: "Your trusted partner for premium solar PV system components & BOS materials. Powering solar projects, end-to-end.",
-      badge: "Welcome"
+      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+      title: "MC4 Connector Special Offer",
+      description: "MC4 connectors at just Rs 10 per pair! Limited time offer. Stock up now and save big on your solar projects.",
+      badge: "Hot Deal"
     },
     {
       image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=1200&q=80",
