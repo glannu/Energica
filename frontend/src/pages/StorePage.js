@@ -215,7 +215,7 @@ export default function StorePage() {
                     onClick={() => handleCategoryClick(cat.name)}
                     className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${selectedCategory === cat.name ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
                   >
-                    <img src={cat.image || "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=200&q=80"} alt={cat.name} className="w-20 h-20 rounded-lg object-cover mb-2" />
+                    <img src={cat.image_url || "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=200&q=80"} alt={cat.name} className="w-20 h-20 rounded-lg object-cover mb-2" />
                     <span className="text-sm font-medium text-center line-clamp-2 w-20">{cat.name}</span>
                   </button>
                 ))}
