@@ -609,6 +609,7 @@ function CategoriesTab() {
   const [editCategory, setEditCategory] = useState(null);
   const [deleteCategory, setDeleteCategory] = useState(null);
   const [initializing, setInitializing] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
@@ -652,12 +653,21 @@ function CategoriesTab() {
         toast.success("Category created successfully");
       }
       setEditCategory(null);
+      setImageError(false);
       fetchCategories();
     } catch (err) {
       console.error("Error saving category:", err);
       toast.error("Failed to save category");
     }
   };
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  useEffect(() => {
+    setImageError(false);
+  }, [editCategory?.image_url]);
 
   const handleDeleteCategory = async () => {
     if (!deleteCategory) return;
@@ -748,7 +758,20 @@ function CategoriesTab() {
               />
             </div>
             {editCategory?.image_url && (
-              <img src={editCategory.image_url} alt="Preview" className="w-full h-32 object-cover rounded-lg" />
+              <div>
+                {imageError ? (
+                  <div className="w-full h-32 bg-neutral-100 rounded-lg flex items-center justify-center text-neutral-500 text-sm">
+                    Failed to load image. Check the URL.
+                  </div>
+                ) : (
+                  <img
+                    src={editCategory.image_url}
+                    alt="Preview"
+                    className="w-full h-32 object-cover rounded-lg"
+                    onError={handleImageError}
+                  />
+                )}
+              </div>
             )}
           </div>
           <DialogFooter>
