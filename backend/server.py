@@ -546,13 +546,13 @@ async def list_categories():
             # Fallback to CATEGORY_IMAGES if database is empty
             pipeline = [{"$group": {"_id": "$category", "count": {"$sum": 1}}}, {"$sort": {"_id": 1}}]
             results = await db.products.aggregate(pipeline).to_list(50)
-            return [{"name": r["_id"], "count": r["count"], "image_url": CATEGORY_IMAGES.get(r["_id"], "")} for r in results]
+            return [{"name": r["_id"], "count": r["count"], "image_url": CATEGORY_IMAGES.get(r["_id"], "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&q=80")} for r in results]
     except Exception as e:
         logging.error(f"Error fetching categories: {e}")
         # Fallback to aggregation from products
         pipeline = [{"$group": {"_id": "$category", "count": {"$sum": 1}}}, {"$sort": {"_id": 1}}]
         results = await db.products.aggregate(pipeline).to_list(50)
-        return [{"name": r["_id"], "count": r["count"], "image_url": CATEGORY_IMAGES.get(r["_id"], "")} for r in results]
+        return [{"name": r["_id"], "count": r["count"], "image_url": CATEGORY_IMAGES.get(r["_id"], "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&q=80")} for r in results]
 
 @api_router.post("/categories")
 async def create_category(category: CategoryCreate, admin=Depends(get_current_admin)):
