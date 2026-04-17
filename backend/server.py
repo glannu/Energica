@@ -74,25 +74,36 @@ logger = logging.getLogger(__name__)
 
 CATEGORY_IMAGES = {
     "Solar Panel": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&q=80",
-    "Inverter": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80",
+    "Solar BOS Kit": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=400&q=80",
+    "On Grid Inverter": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80",
     "Hybrid Inverter": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80",
     "Off Grid Inverter": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80",
     "Micro Inverter": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80",
-    "Battery": "https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=400&q=80",
-    "Wire & Cable": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80",
-    "Connector": "https://images.unsplash.com/photo-1581092921461-eab62e97a782?w=400&q=80",
-    "Distribution Box": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&q=80",
-    "Earthing": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=80",
-    "Lightning": "https://images.unsplash.com/photo-1516961642265-531546e84af2?w=400&q=80",
     "Structure": "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=400&q=80",
+    "Wire & Cable": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=80",
+    "Battery": "https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=400&q=80",
+    "Distribution Box": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&q=80",
     "PPE": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&q=80",
+    "Earthing & Lightning": "https://images.unsplash.com/photo-1516961642265-531546e84af2?w=400&q=80",
+    "Charge Controller": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
     "Meter": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+    "Hardware": "https://images.unsplash.com/photo-1581092921461-eab62e97a782?w=400&q=80",
+    "Tools & Machinery": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80",
+    "Accessories": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=80",
 }
 
 # ─── MODELS ───
 class LoginRequest(BaseModel):
     email: str
     password: str
+
+class CategoryCreate(BaseModel):
+    name: str
+    image_url: str = ""
+
+class CategoryUpdate(BaseModel):
+    name: Optional[str] = None
+    image_url: Optional[str] = None
 
 class ProductCreate(BaseModel):
     name: str
@@ -518,12 +529,89 @@ async def bulk_import_products(file: UploadFile = File(...), admin=Depends(get_c
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Import failed: {str(e)}")
 
-# ─── CATEGORIES ───
+# ─── CATEGORY ENDPOINTS ───
 @api_router.get("/categories")
 async def list_categories():
-    pipeline = [{"$group": {"_id": "$category", "count": {"$sum": 1}}}, {"$sort": {"_id": 1}}]
-    results = await db.products.aggregate(pipeline).to_list(50)
-    return [{"name": r["_id"], "count": r["count"], "image": CATEGORY_IMAGES.get(r["_id"], "")} for r in results]
+    """List all categories with product counts"""
+    try:
+        # Try to get categories from database first
+        db_categories = await db.categories.find({}, {"_id": 0}).to_list(None)
+        if db_categories:
+            # Get product counts for each category
+            for cat in db_categories:
+                count = await db.products.count_documents({"category": cat["name"], "deleted": False})
+                cat["count"] = count
+            return db_categories
+        else:
+            # Fallback to CATEGORY_IMAGES if database is empty
+            pipeline = [{"$group": {"_id": "$category", "count": {"$sum": 1}}}, {"$sort": {"_id": 1}}]
+            results = await db.products.aggregate(pipeline).to_list(50)
+            return [{"name": r["_id"], "count": r["count"], "image_url": CATEGORY_IMAGES.get(r["_id"], "")} for r in results]
+    except Exception as e:
+        logging.error(f"Error fetching categories: {e}")
+        # Fallback to aggregation from products
+        pipeline = [{"$group": {"_id": "$category", "count": {"$sum": 1}}}, {"$sort": {"_id": 1}}]
+        results = await db.products.aggregate(pipeline).to_list(50)
+        return [{"name": r["_id"], "count": r["count"], "image_url": CATEGORY_IMAGES.get(r["_id"], "")} for r in results]
+
+@api_router.post("/categories")
+async def create_category(category: CategoryCreate, admin=Depends(get_current_admin)):
+    """Create a new category"""
+    try:
+        new_category = category.dict()
+        new_category["created_at"] = datetime.now(timezone.utc).isoformat()
+        result = await db.categories.insert_one(new_category)
+        new_category["id"] = str(result.inserted_id)
+        return new_category
+    except Exception as e:
+        logging.error(f"Error creating category: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create category")
+
+@api_router.put("/categories/{category_id}")
+async def update_category(category_id: str, category: CategoryUpdate, admin=Depends(get_current_admin)):
+    """Update a category"""
+    try:
+        update_data = {k: v for k, v in category.dict().items() if v is not None}
+        result = await db.categories.update_one({"id": category_id}, {"$set": update_data})
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Category not found")
+        return {"message": "Category updated successfully"}
+    except Exception as e:
+        logging.error(f"Error updating category: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update category")
+
+@api_router.delete("/categories/{category_id}")
+async def delete_category(category_id: str, admin=Depends(get_current_admin)):
+    """Delete a category"""
+    try:
+        result = await db.categories.delete_one({"id": category_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Category not found")
+        return {"message": "Category deleted successfully"}
+    except Exception as e:
+        logging.error(f"Error deleting category: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete category")
+
+@api_router.post("/categories/initialize")
+async def initialize_categories(admin=Depends(get_current_admin)):
+    """Initialize categories from CATEGORY_IMAGES dictionary"""
+    try:
+        initialized_count = 0
+        for name, image_url in CATEGORY_IMAGES.items():
+            existing = await db.categories.find_one({"name": name})
+            if not existing:
+                category = {
+                    "id": str(uuid.uuid4()),
+                    "name": name,
+                    "image_url": image_url,
+                    "created_at": datetime.now(timezone.utc).isoformat()
+                }
+                await db.categories.insert_one(category)
+                initialized_count += 1
+        return {"message": f"Initialized {initialized_count} categories", "initialized_count": initialized_count}
+    except Exception as e:
+        logging.error(f"Error initializing categories: {e}")
+        raise HTTPException(status_code=500, detail="Failed to initialize categories")
 
 # ─── RFQ ENDPOINTS ───
 @api_router.post("/rfq")

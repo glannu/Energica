@@ -55,9 +55,11 @@ export default function AdminPage() {
       <Tabs defaultValue="products">
         <TabsList className="mb-6">
           <TabsTrigger value="products" data-testid="tab-products"><Package className="h-4 w-4 mr-2" /> Products</TabsTrigger>
+          <TabsTrigger value="categories" data-testid="tab-categories"><ImageIcon className="h-4 w-4 mr-2" /> Categories</TabsTrigger>
           <TabsTrigger value="rfqs" data-testid="tab-rfqs"><FileText className="h-4 w-4 mr-2" /> RFQs</TabsTrigger>
         </TabsList>
         <TabsContent value="products"><ProductsTab /></TabsContent>
+        <TabsContent value="categories"><CategoriesTab /></TabsContent>
         <TabsContent value="rfqs"><RFQsTab /></TabsContent>
       </Tabs>
     </div>
@@ -597,6 +599,178 @@ function RFQsTab() {
           ))}
         </TableBody>
       </Table>
+    </div>
+  );
+}
+
+function CategoriesTab() {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editCategory, setEditCategory] = useState(null);
+  const [deleteCategory, setDeleteCategory] = useState(null);
+  const [initializing, setInitializing] = useState(false);
+
+  const fetchCategories = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get(`${API}/categories`, { headers: getAuthHeaders() });
+      setCategories(data);
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+      toast.error("Failed to fetch categories");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  const handleInitialize = async () => {
+    setInitializing(true);
+    try {
+      const { data } = await axios.post(`${API}/categories/initialize`, {}, { headers: getAuthHeaders() });
+      toast.success(data.message);
+      fetchCategories();
+    } catch (err) {
+      console.error("Error initializing categories:", err);
+      toast.error("Failed to initialize categories");
+    } finally {
+      setInitializing(false);
+    }
+  };
+
+  const handleSaveCategory = async () => {
+    if (!editCategory) return;
+    try {
+      if (editCategory.id) {
+        await axios.put(`${API}/categories/${editCategory.id}`, editCategory, { headers: getAuthHeaders() });
+        toast.success("Category updated successfully");
+      } else {
+        await axios.post(`${API}/categories`, editCategory, { headers: getAuthHeaders() });
+        toast.success("Category created successfully");
+      }
+      setEditCategory(null);
+      fetchCategories();
+    } catch (err) {
+      console.error("Error saving category:", err);
+      toast.error("Failed to save category");
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    if (!deleteCategory) return;
+    try {
+      await axios.delete(`${API}/categories/${deleteCategory.id}`, { headers: getAuthHeaders() });
+      toast.success("Category deleted successfully");
+      setDeleteCategory(null);
+      fetchCategories();
+    } catch (err) {
+      console.error("Error deleting category:", err);
+      toast.error("Failed to delete category");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex gap-3">
+          <Button onClick={() => setEditCategory({ name: "", image_url: "" })}>
+            <ImageIcon className="h-4 w-4 mr-2" /> Add Category
+          </Button>
+          <Button variant="outline" onClick={handleInitialize} disabled={initializing}>
+            {initializing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
+            Initialize from Default
+          </Button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-brand-primary" /></div>
+      ) : (
+        <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="font-semibold">Image</TableHead>
+                <TableHead className="font-semibold">Name</TableHead>
+                <TableHead className="font-semibold">Product Count</TableHead>
+                <TableHead className="font-semibold text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {categories.map(cat => (
+                <TableRow key={cat.id || cat.name}>
+                  <TableCell>
+                    <img src={cat.image_url || "https://via.placeholder.com/50"} alt={cat.name} className="w-12 h-12 rounded-lg object-cover" />
+                  </TableCell>
+                  <TableCell className="font-medium">{cat.name}</TableCell>
+                  <TableCell>{cat.count || 0}</TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button variant="ghost" size="icon" onClick={() => setEditCategory(cat)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => setDeleteCategory(cat)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+
+      {/* Edit Category Dialog */}
+      <Dialog open={!!editCategory} onOpenChange={() => setEditCategory(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editCategory?.id ? "Edit Category" : "Add Category"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label>Category Name</Label>
+              <Input
+                value={editCategory?.name || ""}
+                onChange={(e) => setEditCategory({ ...editCategory, name: e.target.value })}
+                placeholder="Enter category name"
+              />
+            </div>
+            <div>
+              <Label>Image URL</Label>
+              <Input
+                value={editCategory?.image_url || ""}
+                onChange={(e) => setEditCategory({ ...editCategory, image_url: e.target.value })}
+                placeholder="Enter image URL"
+              />
+            </div>
+            {editCategory?.image_url && (
+              <img src={editCategory.image_url} alt="Preview" className="w-full h-32 object-cover rounded-lg" />
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditCategory(null)}>Cancel</Button>
+            <Button onClick={handleSaveCategory}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Category Dialog */}
+      <Dialog open={!!deleteCategory} onOpenChange={() => setDeleteCategory(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Category</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to delete "{deleteCategory?.name}"? This action cannot be undone.</p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteCategory(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleDeleteCategory}>Delete</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
