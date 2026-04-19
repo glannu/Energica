@@ -30,19 +30,19 @@ export default function StorePage() {
 
   const slides = [
     {
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=60",
       title: "MC4 Connector Special Offer",
       description: "MC4 connectors at just Rs 10 per pair! Limited time offer. Stock up now and save big on your solar projects.",
       badge: "Hot Deal"
     },
     {
-      image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=1200&q=80",
+      image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800&q=60",
       title: "Bulk & Bundle Deals",
       description: "Save more with our bulk purchase options! Complete solar kits and bundle packages available at wholesale prices. Perfect for contractors and large projects.",
       badge: "Bulk Savings"
     },
     {
-      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&q=80",
+      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=60",
       title: "Best Price Guarantee",
       description: "Single items at lowest prices with additional discounts on whole purchases. Get premium quality components at unbeatable rates.",
       badge: "Best Prices"
@@ -142,7 +142,7 @@ export default function StorePage() {
     <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Hero Banner Carousel */}
       <div data-testid="store-hero" className="relative rounded-2xl overflow-hidden mb-8 bg-gradient-to-r from-neutral-900 to-neutral-800" style={{ minHeight: '200px' }}>
-        <img src={slides[currentSlide].image} alt={slides[currentSlide].title} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+        <img src={slides[currentSlide].image} alt={slides[currentSlide].title} className="absolute inset-0 w-full h-full object-cover opacity-40" loading="eager" />
         <div className="relative z-10 p-8 sm:p-12 flex flex-col justify-center" style={{ minHeight: '200px' }}>
           <Badge className="w-fit mb-3 bg-brand-primary hover:bg-brand-primary-hover">{slides[currentSlide].badge}</Badge>
           <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-3">{slides[currentSlide].title}</h1>
@@ -205,7 +205,7 @@ export default function StorePage() {
                   onClick={() => handleCategoryClick("")}
                   className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${!selectedCategory ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
                 >
-                  <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=200&q=80" alt="All Products" className="w-20 h-20 rounded-lg object-cover mb-2" />
+                  <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=100&q=60" alt="All Products" className="w-20 h-20 rounded-lg object-cover mb-2" loading="lazy" />
                   <span className="text-sm font-medium text-center">All Products</span>
                 </button>
                 {categories.map(cat => (
@@ -215,7 +215,7 @@ export default function StorePage() {
                     onClick={() => handleCategoryClick(cat.name)}
                     className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all hover:shadow-md flex-shrink-0 ${selectedCategory === cat.name ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:border-neutral-300'}`}
                   >
-                    <img src={cat.image_url || "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=200&q=80"} alt={cat.name} className="w-20 h-20 rounded-lg object-cover mb-2" />
+                    <img src={cat.image_url || "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=100&q=60"} alt={cat.name} className="w-20 h-20 rounded-lg object-cover mb-2" loading="lazy" />
                     <span className="text-sm font-medium text-center line-clamp-2 w-20">{cat.name}</span>
                   </button>
                 ))}
