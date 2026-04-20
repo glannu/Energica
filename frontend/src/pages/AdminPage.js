@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon, Download, FileSpreadsheet, Trash2 } from "lucide-react";
+import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon, Download, FileSpreadsheet, Trash2, Phone } from "lucide-react";
 import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -552,12 +552,36 @@ function RFQsTab() {
   const [rfqs, setRfqs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchRfqs = useCallback(() => {
+    setLoading(true);
     axios.get(`${API}/rfq`, { headers: getAuthHeaders() })
       .then(({ data }) => setRfqs(data.rfqs || []))
       .catch(() => toast.error("Failed to load RFQs"))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => { fetchRfqs(); }, [fetchRfqs]);
+
+  const updateStatus = async (rfqId, newStatus) => {
+    try {
+      await axios.put(`${API}/rfq/${rfqId}/status`, { status: newStatus }, { headers: getAuthHeaders() });
+      setRfqs(prev => prev.map(r => r.id === rfqId ? { ...r, status: newStatus } : r));
+      toast.success(`Status updated to ${newStatus}`);
+    } catch {
+      toast.error("Failed to update status");
+    }
+  };
+
+  const deleteRfq = async (rfqId) => {
+    if (!window.confirm("Are you sure you want to delete this RFQ?")) return;
+    try {
+      await axios.delete(`${API}/rfq/${rfqId}`, { headers: getAuthHeaders() });
+      setRfqs(prev => prev.filter(r => r.id !== rfqId));
+      toast.success("RFQ deleted");
+    } catch {
+      toast.error("Failed to delete RFQ");
+    }
+  };
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-brand-primary" /></div>;
 
@@ -576,24 +600,45 @@ function RFQsTab() {
           <TableRow className="bg-neutral-50">
             <TableHead className="font-semibold">Date</TableHead>
             <TableHead className="font-semibold">Customer</TableHead>
+            <TableHead className="font-semibold">Phone</TableHead>
             <TableHead className="font-semibold text-center">Items</TableHead>
             <TableHead className="font-semibold">Transit</TableHead>
             <TableHead className="font-semibold text-right">Total</TableHead>
             <TableHead className="font-semibold text-center">Status</TableHead>
+            <TableHead className="font-semibold text-center">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rfqs.map(rfq => (
             <TableRow key={rfq.id} data-testid={`rfq-row-${rfq.id}`}>
               <TableCell className="text-sm">{new Date(rfq.created_at).toLocaleDateString('en-IN')}</TableCell>
-              <TableCell className="text-sm">{rfq.customer_name || rfq.customer_phone || 'Anonymous'}</TableCell>
+              <TableCell className="text-sm font-medium">{rfq.customer_name || 'Anonymous'}</TableCell>
+              <TableCell className="text-sm">
+                {rfq.customer_phone ? (
+                  <a href={`tel:${rfq.customer_phone}`} className="flex items-center gap-1 text-blue-600 hover:underline">
+                    <Phone className="h-3 w-3" />{rfq.customer_phone}
+                  </a>
+                ) : '—'}
+              </TableCell>
               <TableCell className="text-center">{rfq.items?.length || 0}</TableCell>
               <TableCell><Badge variant="outline" className="text-xs">{rfq.transit_mode}</Badge></TableCell>
               <TableCell className="text-right font-medium">{formatPrice(rfq.total_amount || 0)}</TableCell>
               <TableCell className="text-center">
-                <Badge className={rfq.status === 'pending' ? 'bg-amber-100 text-amber-700' : rfq.status === 'quoted' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'}>
-                  {rfq.status}
-                </Badge>
+                <Select value={rfq.status} onValueChange={(val) => updateStatus(rfq.id, val)}>
+                  <SelectTrigger className="h-8 w-[120px] mx-auto text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending"><span className="text-amber-600 font-medium">Pending</span></SelectItem>
+                    <SelectItem value="quoted"><span className="text-blue-600 font-medium">Quoted</span></SelectItem>
+                    <SelectItem value="completed"><span className="text-emerald-600 font-medium">Completed</span></SelectItem>
+                  </SelectContent>
+                </Select>
+              </TableCell>
+              <TableCell className="text-center">
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50" onClick={() => deleteRfq(rfq.id)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </TableCell>
             </TableRow>
           ))}

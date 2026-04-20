@@ -635,12 +635,24 @@ async def list_rfqs(admin=Depends(get_current_admin), page: int = 1, limit: int 
     rfqs = await db.rfqs.find({}, {"_id": 0}).sort("created_at", -1).skip(skip).limit(limit).to_list(limit)
     return {"rfqs": rfqs, "total": total, "page": page}
 
+class RFQStatusUpdate(BaseModel):
+    status: str
+
 @api_router.put("/rfq/{rfq_id}/status")
-async def update_rfq_status(rfq_id: str, status: str, admin=Depends(get_current_admin)):
-    result = await db.rfqs.update_one({"id": rfq_id}, {"$set": {"status": status}})
+async def update_rfq_status(rfq_id: str, body: RFQStatusUpdate, admin=Depends(get_current_admin)):
+    if body.status not in ("pending", "quoted", "completed"):
+        raise HTTPException(status_code=400, detail="Invalid status. Must be pending, quoted, or completed.")
+    result = await db.rfqs.update_one({"id": rfq_id}, {"$set": {"status": body.status}})
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="RFQ not found")
-    return {"message": "Status updated"}
+    return {"message": "Status updated", "status": body.status}
+
+@api_router.delete("/rfq/{rfq_id}")
+async def delete_rfq(rfq_id: str, admin=Depends(get_current_admin)):
+    result = await db.rfqs.delete_one({"id": rfq_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="RFQ not found")
+    return {"message": "RFQ deleted"}
 
 # ─── INCLUDE ROUTER & MIDDLEWARE ───
 app.include_router(api_router)
