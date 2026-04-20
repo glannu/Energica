@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { SlidersHorizontal, ChevronDown, Loader2, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { SlidersHorizontal, ChevronDown, Loader2, ChevronLeft, ChevronRight, X, Zap, ShieldCheck, Package } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,22 +30,37 @@ export default function StorePage() {
 
   const slides = [
     {
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=60",
-      title: "MC4 Connector Special Offer",
-      description: "MC4 connectors at just Rs 10 per pair! Limited time offer. Stock up now and save big on your solar projects.",
-      badge: "Hot Deal"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800&q=60",
-      title: "Bulk & Bundle Deals",
-      description: "Save more with our bulk purchase options! Complete solar kits and bundle packages available at wholesale prices. Perfect for contractors and large projects.",
-      badge: "Bulk Savings"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=60",
+      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&q=80",
       title: "Best Price Guarantee",
-      description: "Single items at lowest prices with additional discounts on whole purchases. Get premium quality components at unbeatable rates.",
-      badge: "Best Prices"
+      subtitle: "Unbeatable rates on every component",
+      description: "Single items at lowest prices with additional discounts on bulk purchases. Premium quality solar components at prices that power your profits.",
+      badge: "Best Prices",
+      badgeIcon: <ShieldCheck className="h-3.5 w-3.5" />,
+      gradient: "from-emerald-900/90 via-emerald-900/70 to-transparent",
+      accentColor: "bg-emerald-500",
+      cta: "Explore Products"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1200&q=80",
+      title: "Bulk & Bundle Deals",
+      subtitle: "Wholesale pricing for contractors",
+      description: "Complete solar kits and bundle packages at wholesale prices. Perfect for contractors, installers, and large-scale projects.",
+      badge: "Bulk Savings",
+      badgeIcon: <Package className="h-3.5 w-3.5" />,
+      gradient: "from-blue-900/90 via-blue-900/70 to-transparent",
+      accentColor: "bg-blue-500",
+      cta: "View Deals"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=1200&q=80",
+      title: "MC4 Connector Special",
+      subtitle: "Limited time offer — just ₹10/pair",
+      description: "Stock up on MC4 connectors at unbeatable prices. High-quality, weather-resistant connectors for all your solar installations.",
+      badge: "Hot Deal",
+      badgeIcon: <Zap className="h-3.5 w-3.5" />,
+      gradient: "from-orange-900/90 via-orange-900/70 to-transparent",
+      accentColor: "bg-orange-500",
+      cta: "Shop Now"
     }
   ];
 
@@ -141,40 +156,74 @@ export default function StorePage() {
   return (
     <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Hero Banner Carousel */}
-      <div data-testid="store-hero" className="relative rounded-2xl overflow-hidden mb-8 bg-gradient-to-r from-neutral-900 to-neutral-800" style={{ minHeight: '200px' }}>
-        <img src={slides[currentSlide].image} alt={slides[currentSlide].title} className="absolute inset-0 w-full h-full object-cover opacity-40" loading="eager" />
-        <div className="relative z-10 p-8 sm:p-12 flex flex-col justify-center" style={{ minHeight: '200px' }}>
-          <Badge className="w-fit mb-3 bg-brand-primary hover:bg-brand-primary-hover">{slides[currentSlide].badge}</Badge>
-          <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-3">{slides[currentSlide].title}</h1>
-          <p className="text-neutral-300 text-base sm:text-lg max-w-xl">{slides[currentSlide].description}</p>
-        </div>
+      <div data-testid="store-hero" className="relative rounded-2xl overflow-hidden mb-8 shadow-xl" style={{ height: '320px' }}>
+        {/* All slides stacked — crossfade via opacity */}
+        {slides.map((slide, index) => (
+          <div
+            key={index}
+            className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+            style={{ opacity: currentSlide === index ? 1 : 0, zIndex: currentSlide === index ? 1 : 0 }}
+          >
+            {/* Background image */}
+            <img
+              src={slide.image}
+              alt={slide.title}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading={index === 0 ? "eager" : "lazy"}
+            />
+            {/* Gradient overlay */}
+            <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
+            {/* Bottom vignette */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+            {/* Content */}
+            <div className="relative z-10 h-full flex flex-col justify-center px-8 sm:px-12 lg:px-16 max-w-2xl">
+              <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-white text-xs font-semibold mb-4 w-fit ${slide.accentColor}`}>
+                {slide.badgeIcon}
+                {slide.badge}
+              </div>
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-2 drop-shadow-lg">
+                {slide.title}
+              </h1>
+              <p className="text-white/80 text-sm sm:text-base font-medium mb-1">{slide.subtitle}</p>
+              <p className="text-white/60 text-sm sm:text-base max-w-lg leading-relaxed mb-6 hidden sm:block">
+                {slide.description}
+              </p>
+              <div>
+                <button className="inline-flex items-center gap-2 bg-white text-neutral-900 font-semibold text-sm px-6 py-2.5 rounded-lg hover:bg-neutral-100 transition-colors shadow-lg">
+                  {slide.cta}
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
 
         {/* Navigation Arrows */}
-        <Button
-          variant="outline"
-          size="icon"
+        <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-md z-20"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/40 transition-all"
         >
           <ChevronLeft className="h-5 w-5" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
+        </button>
+        <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-md z-20"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/40 transition-all"
         >
           <ChevronRight className="h-5 w-5" />
-        </Button>
+        </button>
 
-        {/* Dots Navigation */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        {/* Dots + Progress */}
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2.5 z-20">
           {slides.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all ${currentSlide === index ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/70'}`}
-            />
+              className="relative h-1.5 rounded-full overflow-hidden transition-all duration-300"
+              style={{ width: currentSlide === index ? '2rem' : '0.5rem' }}
+            >
+              <span className={`absolute inset-0 rounded-full transition-colors ${currentSlide === index ? 'bg-white' : 'bg-white/40 hover:bg-white/60'}`} />
+            </button>
           ))}
         </div>
       </div>
