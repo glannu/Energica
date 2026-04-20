@@ -617,6 +617,10 @@ async def initialize_categories(admin=Depends(get_current_admin)):
 @api_router.post("/rfq")
 async def create_rfq(rfq: RFQCreate):
     doc = rfq.model_dump()
+    customer_phone = doc.get("customer_phone", "").strip()
+    if not customer_phone:
+        raise HTTPException(status_code=400, detail="Customer phone is required")
+    doc["customer_phone"] = customer_phone
     doc["id"] = str(uuid.uuid4())
     doc["status"] = "pending"
     doc["created_at"] = datetime.now(timezone.utc).isoformat()
