@@ -355,6 +355,12 @@ async def list_products(category: str = None, search: str = None, sort: str = No
     elif sort == "price_desc": sort_field = [("price", -1)]
     elif sort == "name_asc": sort_field = [("name", 1)]
     elif sort == "name_desc": sort_field = [("name", -1)]
+    elif sort == "stock_asc": sort_field = [("stock", 1)]
+    elif sort == "stock_desc": sort_field = [("stock", -1)]
+    elif sort == "category_asc": sort_field = [("category", 1)]
+    elif sort == "category_desc": sort_field = [("category", -1)]
+    elif sort == "code_asc": sort_field = [("item_code", 1)]
+    elif sort == "code_desc": sort_field = [("item_code", -1)]
 
     total = await db.products.count_documents(query)
     skip = (page - 1) * limit

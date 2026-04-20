@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon, Download, FileSpreadsheet, Trash2, Phone } from "lucide-react";
+import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon, Download, FileSpreadsheet, Trash2, Phone, ArrowUpDown, ArrowUp, ArrowDown, X } from "lucide-react";
 import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -66,6 +66,26 @@ export default function AdminPage() {
   );
 }
 
+function SortableHeader({ label, sortKey, currentSort, onSort, className = "" }) {
+  const isActive = currentSort?.startsWith(sortKey);
+  const isAsc = currentSort === `${sortKey}_asc`;
+  const isDesc = currentSort === `${sortKey}_desc`;
+
+  const handleClick = () => {
+    if (!isActive || isDesc) onSort(`${sortKey}_asc`);
+    else if (isAsc) onSort(`${sortKey}_desc`);
+  };
+
+  return (
+    <TableHead className={`font-semibold cursor-pointer select-none hover:bg-neutral-100 transition-colors ${className}`} onClick={handleClick}>
+      <div className={`flex items-center gap-1 ${className.includes('text-right') ? 'justify-end' : ''}`}>
+        {label}
+        {isAsc ? <ArrowUp className="h-3 w-3 text-brand-primary" /> : isDesc ? <ArrowDown className="h-3 w-3 text-brand-primary" /> : <ArrowUpDown className="h-3 w-3 text-neutral-300" />}
+      </div>
+    </TableHead>
+  );
+}
+
 function ProductsTab() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -77,21 +97,39 @@ function ProductsTab() {
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [sortBy, setSortBy] = useState("name_asc");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [stockFilter, setStockFilter] = useState("");
+  const [categories, setCategories] = useState([]);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    axios.get(`${API}/categories`).then(({ data }) => {
+      const names = (Array.isArray(data) ? data : []).map(c => c.name).filter(Boolean).sort();
+      setCategories(names);
+    }).catch(() => {});
+  }, []);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const params = { page, limit: 25, sort: "name_asc" };
+      const params = { page, limit: 25, sort: sortBy };
       if (search) params.search = search;
+      if (categoryFilter) params.category = categoryFilter;
+      if (stockFilter) params.in_stock = stockFilter;
       const { data } = await axios.get(`${API}/products`, { params });
       setProducts(data.products);
       setTotalPages(data.total_pages);
     } catch (err) { toast.error("Failed to load products"); }
     finally { setLoading(false); }
-  }, [search, page]);
+  }, [search, page, sortBy, categoryFilter, stockFilter]);
 
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
+
+  const handleSort = (newSort) => { setSortBy(newSort); setPage(1); };
+
+  const hasFilters = categoryFilter || stockFilter;
+  const clearFilters = () => { setCategoryFilter(""); setStockFilter(""); setPage(1); };
 
   const handleSave = async (id, updates) => {
     try {
@@ -168,11 +206,36 @@ function ProductsTab() {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-4">
-        <div className="relative flex-1 max-w-sm">
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
           <Input data-testid="admin-product-search" placeholder="Search products..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-10" />
         </div>
+        <Select value={categoryFilter} onValueChange={(val) => { setCategoryFilter(val === "all" ? "" : val); setPage(1); }}>
+          <SelectTrigger className="w-[180px] h-9">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <Select value={stockFilter} onValueChange={(val) => { setStockFilter(val === "all" ? "" : val); setPage(1); }}>
+          <SelectTrigger className="w-[140px] h-9">
+            <SelectValue placeholder="All Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="true">In Stock</SelectItem>
+            <SelectItem value="false">Out of Stock</SelectItem>
+          </SelectContent>
+        </Select>
+        {hasFilters && (
+          <Button variant="ghost" size="sm" onClick={clearFilters} className="text-neutral-500 hover:text-neutral-700">
+            <X className="h-4 w-4 mr-1" />Clear
+          </Button>
+        )}
+        <div className="flex-1" />
         <Button variant="outline" onClick={handleExport} disabled={exporting}>
           {exporting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Download className="h-4 w-4 mr-2" />}
           Export
@@ -198,11 +261,11 @@ function ProductsTab() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-neutral-50">
-                  <TableHead className="font-semibold">Code</TableHead>
-                  <TableHead className="font-semibold">Product</TableHead>
-                  <TableHead className="font-semibold">Category</TableHead>
-                  <TableHead className="font-semibold text-right">Price</TableHead>
-                  <TableHead className="font-semibold text-right">Stock</TableHead>
+                  <SortableHeader label="Code" sortKey="code" currentSort={sortBy} onSort={handleSort} />
+                  <SortableHeader label="Product" sortKey="name" currentSort={sortBy} onSort={handleSort} />
+                  <SortableHeader label="Category" sortKey="category" currentSort={sortBy} onSort={handleSort} />
+                  <SortableHeader label="Price" sortKey="price" currentSort={sortBy} onSort={handleSort} className="text-right" />
+                  <SortableHeader label="Stock" sortKey="stock" currentSort={sortBy} onSort={handleSort} className="text-right" />
                   <TableHead className="font-semibold text-center">Status</TableHead>
                   <TableHead className="font-semibold text-center">Actions</TableHead>
                 </TableRow>
