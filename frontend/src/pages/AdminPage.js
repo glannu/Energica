@@ -89,11 +89,10 @@ function SortableHeader({ label, sortKey, currentSort, onSort, className = "" })
 function ProductsTab() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [search, setSearch] = useState("");
   const [editProduct, setEditProduct] = useState(null);
   const [deleteProduct, setDeleteProduct] = useState(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -101,7 +100,12 @@ function ProductsTab() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [stockFilter, setStockFilter] = useState("");
   const [categories, setCategories] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const fileInputRef = useRef(null);
+  const sentinelRef = useRef(null);
+  const pageRef = useRef(1);
+  const LIMIT = 50;
 
   useEffect(() => {
     axios.get(`${API}/categories`).then(({ data }) => {
@@ -110,26 +114,48 @@ function ProductsTab() {
     }).catch(() => {});
   }, []);
 
-  const fetchProducts = useCallback(async () => {
-    setLoading(true);
+  const fetchProducts = useCallback(async (reset = false) => {
+    if (reset) {
+      setLoading(true);
+      pageRef.current = 1;
+    } else {
+      setLoadingMore(true);
+    }
     try {
-      const params = { page, limit: 25, sort: sortBy };
+      const params = { page: pageRef.current, limit: LIMIT, sort: sortBy };
       if (search) params.search = search;
       if (categoryFilter) params.category = categoryFilter;
       if (stockFilter) params.in_stock = stockFilter;
       const { data } = await axios.get(`${API}/products`, { params });
-      setProducts(data.products);
-      setTotalPages(data.total_pages);
+      if (reset) {
+        setProducts(data.products);
+      } else {
+        setProducts(prev => [...prev, ...data.products]);
+      }
+      setTotalCount(data.total);
+      setHasMore(pageRef.current < data.total_pages);
     } catch (err) { toast.error("Failed to load products"); }
-    finally { setLoading(false); }
-  }, [search, page, sortBy, categoryFilter, stockFilter]);
+    finally { setLoading(false); setLoadingMore(false); }
+  }, [search, sortBy, categoryFilter, stockFilter]);
 
-  useEffect(() => { fetchProducts(); }, [fetchProducts]);
+  useEffect(() => { fetchProducts(true); }, [fetchProducts]);
 
-  const handleSort = (newSort) => { setSortBy(newSort); setPage(1); };
+  useEffect(() => {
+    if (!sentinelRef.current || loading) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && hasMore && !loadingMore) {
+        pageRef.current += 1;
+        fetchProducts(false);
+      }
+    }, { rootMargin: '200px' });
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, loading, fetchProducts]);
+
+  const handleSort = (newSort) => { setSortBy(newSort); };
 
   const hasFilters = categoryFilter || stockFilter;
-  const clearFilters = () => { setCategoryFilter(""); setStockFilter(""); setPage(1); };
+  const clearFilters = () => { setCategoryFilter(""); setStockFilter(""); };
 
   const handleSave = async (id, updates) => {
     try {
@@ -209,9 +235,9 @@ function ProductsTab() {
       <div className="flex items-center gap-3 mb-4 flex-wrap">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-          <Input data-testid="admin-product-search" placeholder="Search products..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-10" />
+          <Input data-testid="admin-product-search" placeholder="Search products..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
         </div>
-        <Select value={categoryFilter} onValueChange={(val) => { setCategoryFilter(val === "all" ? "" : val); setPage(1); }}>
+        <Select value={categoryFilter} onValueChange={(val) => setCategoryFilter(val === "all" ? "" : val)}>
           <SelectTrigger className="w-[180px] h-9">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
@@ -220,7 +246,7 @@ function ProductsTab() {
             {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={stockFilter} onValueChange={(val) => { setStockFilter(val === "all" ? "" : val); setPage(1); }}>
+        <Select value={stockFilter} onValueChange={(val) => setStockFilter(val === "all" ? "" : val)}>
           <SelectTrigger className="w-[140px] h-9">
             <SelectValue placeholder="All Status" />
           </SelectTrigger>
@@ -294,10 +320,12 @@ function ProductsTab() {
               </TableBody>
             </Table>
           </div>
-          <div className="flex justify-center gap-2 mt-4">
-            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Previous</Button>
-            <span className="text-sm text-neutral-500 self-center">Page {page} of {totalPages}</span>
-            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Next</Button>
+          <div ref={sentinelRef} className="h-1" />
+          {loadingMore && (
+            <div className="flex justify-center py-4"><Loader2 className="h-5 w-5 animate-spin text-brand-primary" /></div>
+          )}
+          <div className="text-center text-xs text-neutral-400 py-2">
+            Showing {products.length} of {totalCount} products
           </div>
         </>
       )}
