@@ -23,7 +23,6 @@ export function QuoteProvider({ children }) {
       }
       return [...prev, { product, quantity }];
     });
-    setIsDrawerOpen(true);
   }, []);
 
   const removeItem = useCallback((productId) => {
