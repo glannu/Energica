@@ -15,7 +15,7 @@ const formatPrice = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', c
 
 export default function ProductPage() {
   const { id } = useParams();
-  const { addItem } = useQuote();
+  const { addItem, setIsDrawerOpen } = useQuote();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -109,7 +109,13 @@ export default function ProductPage() {
 
   const handleAddToQuote = () => {
     addItem(product, quantity);
-    toast.success(`${product.name} added to quote`);
+    toast.success(`${product.name} added to quote`, {
+      duration: 3000,
+      action: {
+        label: "Go to Cart",
+        onClick: () => setIsDrawerOpen(true),
+      },
+    });
   };
 
   const handleDatasheetRequest = () => {

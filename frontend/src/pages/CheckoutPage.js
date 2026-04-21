@@ -21,6 +21,7 @@ export default function CheckoutPage() {
   const [transitMode, setTransitMode] = useState("Ex-Works");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [gstNumber, setGstNumber] = useState("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -47,6 +48,7 @@ export default function CheckoutPage() {
         transit_mode: transitMode,
         customer_name: customerName.trim(),
         customer_phone: sanitizedPhone,
+        gst_number: gstNumber.trim() || undefined,
         notes: notes.trim()
       });
 
@@ -58,6 +60,7 @@ export default function CheckoutPage() {
       msg += `Estimated Total: ${formatPrice(totalAmount)}\n`;
       if (customerName.trim()) msg += `Name: ${customerName.trim()}\n`;
       msg += `Phone: ${sanitizedPhone}\n`;
+      if (gstNumber.trim()) msg += `GST No: ${gstNumber.trim()}\n`;
       if (notes.trim()) msg += `Notes: ${notes.trim()}\n`;
       msg += "\nPlease share your best quotation.\nThank you!";
 
@@ -108,6 +111,16 @@ export default function CheckoutPage() {
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   required
+                />
+              </div>
+              <div>
+                <Label htmlFor="gst-number">GST Number (Optional)</Label>
+                <Input
+                  id="gst-number"
+                  placeholder="e.g. 27AABCU9603R1ZM"
+                  value={gstNumber}
+                  onChange={(e) => setGstNumber(e.target.value.toUpperCase())}
+                  maxLength={15}
                 />
               </div>
               <div>

@@ -160,6 +160,7 @@ class RFQCreate(BaseModel):
     customer_name: str = ""
     customer_phone: str = ""
     customer_email: str = ""
+    gst_number: str = ""
     notes: str = ""
 
 # ─── AUTH ───

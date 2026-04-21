@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { Plus, ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useQuote } from "@/context/QuoteContext";
@@ -8,7 +9,19 @@ import { Skeleton } from "@/components/Skeleton";
 const formatPrice = (price) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
 
 export default function ProductCard({ product, loading }) {
-  const { addItem } = useQuote();
+  const { addItem, setIsDrawerOpen } = useQuote();
+
+  const handleAddToQuote = (e) => {
+    e.preventDefault();
+    addItem(product, product.moq || 1);
+    toast.success(`${product.name} added to quote`, {
+      duration: 3000,
+      action: {
+        label: "Go to Cart",
+        onClick: () => setIsDrawerOpen(true),
+      },
+    });
+  };
 
   if (loading) {
     return (
@@ -52,7 +65,7 @@ export default function ProductCard({ product, loading }) {
           data-testid="add-to-quote-button"
           variant="outline"
           className="w-full mt-2.5 h-8 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white font-medium text-xs transition-colors"
-          onClick={(e) => { e.preventDefault(); addItem(product, product.moq || 1); }}
+          onClick={handleAddToQuote}
           disabled={!product.in_stock}
         >
           <Plus className="h-3.5 w-3.5 mr-1" /> Add to Quote

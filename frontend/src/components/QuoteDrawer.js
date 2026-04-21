@@ -79,7 +79,11 @@ export default function QuoteDrawer() {
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
 
-              <Button variant="ghost" className="w-full text-neutral-500 text-sm" onClick={clearCart} data-testid="clear-cart-btn">
+              <Button variant="outline" className="w-full text-neutral-700 text-sm font-medium" onClick={() => setIsDrawerOpen(false)}>
+                Continue Shopping
+              </Button>
+
+              <Button variant="ghost" className="w-full text-neutral-400 text-xs" onClick={clearCart} data-testid="clear-cart-btn">
                 Clear All Items
               </Button>
             </div>
