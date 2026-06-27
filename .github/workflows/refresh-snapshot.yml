@@ -1,0 +1,32 @@
+name: Refresh Store Data
+
+# Rebuilds the site so the static product/category snapshot is regenerated from
+# the live backend. Runs automatically once a day, and you can run it on demand
+# any time from the Actions tab ("Run workflow") for an instant refresh after
+# updating products in the admin panel — no Vercel redeploy needed.
+
+on:
+  schedule:
+    - cron: "30 2 * * *"      # daily at 02:30 UTC (08:00 IST)
+  workflow_dispatch: {}        # manual "Run workflow" button = instant refresh
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trigger a rebuild (re-snapshots the latest data)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Touch a file inside the frontend/ root so Vercel detects a change and
+          # rebuilds (which re-fetches the latest data). Not inside public/, so it
+          # is never served to visitors.
+          date -u +"Store data refreshed at %Y-%m-%dT%H:%M:%SZ" > frontend/.last-data-refresh
+          git add frontend/.last-data-refresh
+          git commit -m "chore: refresh store data snapshot" || { echo "Nothing changed"; exit 0; }
+          git push
