@@ -18,6 +18,20 @@
       "dest": "/static/$1"
     },
     {
+      "src": "/products.json",
+      "headers": {
+        "cache-control": "public, max-age=300, stale-while-revalidate=3600"
+      },
+      "dest": "/products.json"
+    },
+    {
+      "src": "/categories.json",
+      "headers": {
+        "cache-control": "public, max-age=300, stale-while-revalidate=3600"
+      },
+      "dest": "/categories.json"
+    },
+    {
       "src": "/favicon.ico",
       "dest": "/favicon.ico"
     },
