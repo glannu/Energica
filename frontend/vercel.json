@@ -36,16 +36,12 @@
       "dest": "/favicon.ico"
     },
     {
+      "src": "/(.*\\.(png|jpg|jpeg|webp|svg|gif))",
+      "headers": {
+        "cache-control": "public, max-age=86400"
+      },
+      "dest": "/$1"
+    },
+    {
       "src": "/asset-manifest.json",
-      "dest": "/asset-manifest.json"
-    },
-    {
-      "src": "/manifest.json",
-      "dest": "/manifest.json"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
-}
+      "dest": "/asset-manifest
