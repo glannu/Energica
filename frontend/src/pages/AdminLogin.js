@@ -40,7 +40,7 @@ export default function AdminLogin() {
             <Lock className="h-6 w-6 text-neutral-600" />
           </div>
           <h1 className="font-heading text-2xl font-bold text-neutral-900">Admin Login</h1>
-          <p className="text-sm text-neutral-500 mt-1">Glannu Energy Store Management</p>
+          <p className="text-sm text-neutral-500 mt-1">Glannu Solar Store Management</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

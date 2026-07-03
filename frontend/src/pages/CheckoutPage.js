@@ -52,7 +52,7 @@ export default function CheckoutPage() {
         notes: notes.trim()
       });
 
-      let msg = "Hello Glannu Energy,\n\nI would like to request a quote for:\n\n";
+      let msg = "Hello Glannu,\n\nI would like to request a quote for:\n\n";
       items.forEach((item, idx) => {
         msg += `${idx + 1}. ${item.product.name} x ${item.quantity} ${item.product.uom} (${formatPrice(item.product.price)}/${item.product.uom})\n`;
       });

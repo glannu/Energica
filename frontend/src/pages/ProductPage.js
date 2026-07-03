@@ -119,7 +119,7 @@ export default function ProductPage() {
   };
 
   const handleDatasheetRequest = () => {
-    const msg = `Hello Glannu Energy, I would like to request the datasheet for: ${product.name} (${product.item_code}). Please share it on my email/WhatsApp. Thank you!`;
+    const msg = `Hello Glannu, I would like to request the datasheet for: ${product.name} (${product.item_code}). Please share it on my email/WhatsApp. Thank you!`;
     window.open(`https://wa.me/918605657016?text=${encodeURIComponent(msg)}`, '_blank');
     toast.info("Datasheet request sent via WhatsApp");
   };

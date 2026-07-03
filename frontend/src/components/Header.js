@@ -81,7 +81,7 @@ export default function Header() {
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
           <Link to="/" className="flex items-center gap-2" data-testid="logo-link" onClick={() => { setSearchOpen(false); setMobileMenuOpen(false); setShowDropdown(false); }}>
-            <img src="/glannu-logo.png" alt="Glannu Energy" className="h-9 w-auto" />
+            <img src="/glannu-logo.png" alt="Glannu" className="h-9 w-auto" />
           </Link>
         </div>
 
