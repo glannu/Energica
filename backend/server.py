@@ -29,17 +29,6 @@ db = client[os.environ['DB_NAME']]
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
-# CORS: allow the storefront origins (comma-separated env, default all)
-_cors = os.environ.get("CORS_ORIGINS", "*")
-_origins = [o.strip() for o in _cors.split(",") if o.strip()] or ["*"]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=_origins,
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # Create uploads directory and serve static files
 UPLOAD_DIR = ROOT_DIR / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -684,4 +673,36 @@ async def update_rfq_status(rfq_id: str, body: RFQStatusUpdate, admin=Depends(ge
         raise HTTPException(status_code=400, detail="Invalid status. Must be pending, quoted, or completed.")
     result = await db.rfqs.update_one({"id": rfq_id}, {"$set": {"status": body.status}})
     if result.matched_count == 0:
-        rais
+        raise HTTPException(status_code=404, detail="RFQ not found")
+    return {"message": "Status updated", "status": body.status}
+
+@api_router.delete("/rfq/{rfq_id}")
+async def delete_rfq(rfq_id: str, admin=Depends(get_current_admin)):
+    result = await db.rfqs.delete_one({"id": rfq_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="RFQ not found")
+    return {"message": "RFQ deleted"}
+
+# ─── INCLUDE ROUTER & MIDDLEWARE ───
+app.include_router(api_router)
+
+# Configure CORS based on environment
+cors_origins = os.environ.get('CORS_ORIGINS', '*')
+if cors_origins == '*':
+    # Development: allow all origins
+    allow_origins = ['*']
+else:
+    # Production: specific origins
+    allow_origins = [origin.strip() for origin in cors_origins.split(',')]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=allow_origins,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.on_event("shutdown")
+async def shutdown():
+    client.close()
