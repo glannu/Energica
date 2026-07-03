@@ -44,4 +44,15 @@
     },
     {
       "src": "/asset-manifest.json",
-      "dest": "/asset-manifest
+      "dest": "/asset-manifest.json"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
