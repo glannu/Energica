@@ -5,14 +5,14 @@ const QuoteContext = createContext();
 export function QuoteProvider({ children }) {
   const [items, setItems] = useState(() => {
     try {
-      const saved = localStorage.getItem("energica_quote");
+      const saved = localStorage.getItem("glannu_quote");
       return saved ? JSON.parse(saved) : [];
     } catch { return []; }
   });
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("energica_quote", JSON.stringify(items));
+    localStorage.setItem("glannu_quote", JSON.stringify(items));
   }, [items]);
 
   const addItem = useCallback((product, quantity = 1) => {

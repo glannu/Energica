@@ -81,7 +81,7 @@ export default function Header() {
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
           <Link to="/" className="flex items-center gap-2" data-testid="logo-link" onClick={() => { setSearchOpen(false); setMobileMenuOpen(false); setShowDropdown(false); }}>
-            <img src="https://www.energicasolutions.com/Energica%20Logo%20-1-.webp" alt="Energica Solutions" className="h-9 w-auto" />
+            <img src="/glannu-logo.png" alt="Glannu Energy" className="h-9 w-auto" />
           </Link>
         </div>
 
@@ -155,9 +155,9 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-3">
-          <a href="tel:18002678283" className="hidden lg:flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors" data-testid="phone-link">
+          <a href="tel:+917083898947" className="hidden lg:flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors" data-testid="phone-link">
             <Phone className="h-4 w-4" />
-            <span className="font-medium">1800 267 8283</span>
+            <span className="font-medium">+91 70838 98947</span>
           </a>
           <Link to="/admin/login" className="hidden md:flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors px-3 py-2 rounded-md hover:bg-neutral-50">
             Admin
@@ -195,8 +195,8 @@ export default function Header() {
         <nav className="md:hidden border-t border-neutral-100 bg-white px-4 py-3 shadow-lg">
           <div className="flex flex-col gap-2">
             <Link to="/" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md">All Products</Link>
-            <a href="tel:18002678283" className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md flex items-center gap-2"><Phone className="h-4 w-4" /> 1800 267 8283</a>
-            <a href="mailto:salesenergicasolutions@gmail.com" className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md">salesenergicasolutions@gmail.com</a>
+            <a href="tel:+917083898947" className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md flex items-center gap-2"><Phone className="h-4 w-4" /> +91 70838 98947</a>
+            <a href="mailto:info.glannu@gmail.com" className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md">info.glannu@gmail.com</a>
             <Link to="/admin/login" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 text-sm font-medium text-neutral-500 hover:bg-neutral-50 rounded-md">Admin</Link>
           </div>
         </nav>

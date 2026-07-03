@@ -283,7 +283,7 @@ def generate_products():
 
 # ─── STARTUP ───
 async def seed_admin():
-    admin_email = os.environ.get("ADMIN_EMAIL", "admin@energicasolutions.com")
+    admin_email = os.environ.get("ADMIN_EMAIL", "admin@glannu.com")
     admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
     existing = await db.users.find_one({"email": admin_email})
     if not existing:
@@ -314,7 +314,7 @@ async def startup():
     # Create memory directory for test credentials (optional)
     try:
         os.makedirs("/app/memory", exist_ok=True)
-        ae = os.environ.get("ADMIN_EMAIL", "admin@energicasolutions.com")
+        ae = os.environ.get("ADMIN_EMAIL", "admin@glannu.com")
         ap = os.environ.get("ADMIN_PASSWORD", "admin123")
         with open("/app/memory/test_credentials.md", "w") as f:
             f.write(f"# Test Credentials\n\n## Admin\n- Email: {ae}\n- Password: {ap}\n- Role: admin\n\n## Auth Endpoints\n- POST /api/auth/login\n- GET /api/auth/me\n\n## Product Endpoints\n- GET /api/products\n- GET /api/products/:id\n- POST /api/products (admin)\n- PUT /api/products/:id (admin)\n- DELETE /api/products/:id (admin)\n\n## RFQ Endpoints\n- POST /api/rfq\n- GET /api/rfq (admin)\n")

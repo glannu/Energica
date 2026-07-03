@@ -1,6 +1,6 @@
 // installCache.js
 // ---------------------------------------------------------------------------
-// Makes the Energica store load instantly without waiting on the Render backend.
+// Makes the Glannu store load instantly without waiting on the Render backend.
 //
 // How it works:
 //   * Product + category READS (GET /api/products, /api/products/:id,
@@ -22,7 +22,7 @@ import axios from "axios";
 
 const SNAP_PRODUCTS = "/products.json";
 const SNAP_CATEGORIES = "/categories.json";
-const LS_KEY = "energica_data_cache_v1";
+const LS_KEY = "glannu_data_cache_v1";
 const BROWSER_TTL = 30 * 60 * 1000; // treat localStorage copy as fresh for 30 min
 
 let mem = null; // { products: [...], categories: [...], ts: <number> }

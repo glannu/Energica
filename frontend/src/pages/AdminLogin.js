@@ -40,12 +40,12 @@ export default function AdminLogin() {
             <Lock className="h-6 w-6 text-neutral-600" />
           </div>
           <h1 className="font-heading text-2xl font-bold text-neutral-900">Admin Login</h1>
-          <p className="text-sm text-neutral-500 mt-1">Energica Solutions Store Management</p>
+          <p className="text-sm text-neutral-500 mt-1">Glannu Energy Store Management</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="email" className="text-sm font-medium text-neutral-700">Email</Label>
-            <Input id="email" data-testid="admin-email-input" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="admin@energicasolutions.com" required className="mt-1" />
+            <Input id="email" data-testid="admin-email-input" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="admin@glannu.com" required className="mt-1" />
           </div>
           <div>
             <Label htmlFor="password" className="text-sm font-medium text-neutral-700">Password</Label>

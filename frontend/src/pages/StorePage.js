@@ -364,14 +364,14 @@ export default function StorePage() {
       <footer className="mt-16 border-t border-neutral-200 pt-8 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <img src="https://www.energicasolutions.com/Energica%20Logo%20-1-.webp" alt="Energica" className="h-10 mb-3" />
-            <p className="text-sm text-neutral-500 leading-relaxed">Energica Solutions Pvt. Ltd., Pune. Trusted distributor of solar PV system components and BOS materials.</p>
+            <img src="/glannu-logo.png" alt="Glannu Energy" className="h-10 mb-3" />
+            <p className="text-sm text-neutral-500 leading-relaxed">Glannu Energy, Pune. Trusted distributor of solar PV system components and BOS materials.</p>
           </div>
           <div>
             <h3 className="font-heading font-semibold text-sm uppercase tracking-wider text-neutral-500 mb-3">Contact</h3>
-            <p className="text-sm text-neutral-600">Toll Free: 1800 267 8283</p>
-            <p className="text-sm text-neutral-600 mt-1">Email: salesenergicasolutions@gmail.com</p>
-            <p className="text-sm text-neutral-600 mt-1">WhatsApp: +91 8007520000</p>
+            <p className="text-sm text-neutral-600">Phone: +91 70838 98947</p>
+            <p className="text-sm text-neutral-600 mt-1">Email: info.glannu@gmail.com</p>
+            <p className="text-sm text-neutral-600 mt-1">WhatsApp: +91 86056 57016</p>
           </div>
           <div>
             <h3 className="font-heading font-semibold text-sm uppercase tracking-wider text-neutral-500 mb-3">Quick Links</h3>
@@ -381,7 +381,7 @@ export default function StorePage() {
           </div>
         </div>
         <Separator className="my-6" />
-        <p className="text-xs text-neutral-400 text-center">&copy; {new Date().getFullYear()} Energica Solutions Private Limited. All rights reserved.</p>
+        <p className="text-xs text-neutral-400 text-center">&copy; {new Date().getFullYear()} Glannu Energy. All rights reserved.</p>
       </footer>
     </main>
   );

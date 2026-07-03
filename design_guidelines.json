@@ -72,8 +72,8 @@
   "media": {
     "images": {
       "logo": {
-        "url": "https://www.energicasolutions.com/Energica%20Logo%20-1-.webp",
-        "description": "Energica Solutions Logo",
+        "url": "/glannu-logo.png",
+        "description": "Glannu Energy Logo",
         "category": "brand"
       },
       "category_solar_panels": {
@@ -110,7 +110,7 @@
   },
   "instructions_to_main_agent": {
     "store_workflow": "Create a robust Shadcn 'Sheet' component for the 'Quote Cart'. When 'Add to Quote' is clicked on a product, it goes here. The sheet should display items, a subtotal, a 'Transit Mode' select dropdown (Ex-Works, Door Delivery, Transport/Freight), and a massive green WhatsApp CTA button.",
-    "whatsapp_integration": "The WhatsApp button MUST encode the cart contents, transit mode, and user's intent into a URL string and open `https://wa.me/918007520000?text=...`. Example: 'Hello Energica Solutions, I would like to request a quote for: 1x 12W Solar Street Light... Transit: Ex-Works.'",
+    "whatsapp_integration": "The WhatsApp button MUST encode the cart contents, transit mode, and user's intent into a URL string and open `https://wa.me/918605657016?text=...`. Example: 'Hello Glannu Energy, I would like to request a quote for: 1x 12W Solar Street Light... Transit: Ex-Works.'",
     "product_pages": "Implement a dynamic route for products `/product/:id`. Use a 2-column layout: left side large image + thumbnails, right side title, specs, 'Add to Quote' button, and a prominent 'Download Datasheet' secondary button (simulated PDF download link). Below, show 'Applications' and 'Similar Products' in a grid.",
     "admin_panel": "Build a clean `/admin` route (mocked auth is fine if not specified) with Shadcn Tabs. Tab 1: Products (Shadcn Table with Add/Edit/Delete actions for stock and prices). Tab 2: RFQs (Read-only view of past RFQs, mocked data).",
     "testing": "Ensure all Add to Quote buttons have `data-testid='add-to-quote-button'`, the WhatsApp submit button has `data-testid='submit-whatsapp-rfq-button'`, and category filters use `data-testid='category-filter-[name]'`."

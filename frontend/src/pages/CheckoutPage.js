@@ -52,7 +52,7 @@ export default function CheckoutPage() {
         notes: notes.trim()
       });
 
-      let msg = "Hello Energica Solutions,\n\nI would like to request a quote for:\n\n";
+      let msg = "Hello Glannu Energy,\n\nI would like to request a quote for:\n\n";
       items.forEach((item, idx) => {
         msg += `${idx + 1}. ${item.product.name} x ${item.quantity} ${item.product.uom} (${formatPrice(item.product.price)}/${item.product.uom})\n`;
       });
@@ -64,7 +64,7 @@ export default function CheckoutPage() {
       if (notes.trim()) msg += `Notes: ${notes.trim()}\n`;
       msg += "\nPlease share your best quotation.\nThank you!";
 
-      window.open(`https://wa.me/918007520000?text=${encodeURIComponent(msg)}`, "_blank");
+      window.open(`https://wa.me/918605657016?text=${encodeURIComponent(msg)}`, "_blank");
       clearCart();
       toast.success("RFQ sent successfully!");
       navigate("/");
