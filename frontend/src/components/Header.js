@@ -159,9 +159,6 @@ export default function Header() {
             <Phone className="h-4 w-4" />
             <span className="font-medium">+91 70838 98947</span>
           </a>
-          <Link to="/admin/login" className="hidden md:flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors px-3 py-2 rounded-md hover:bg-neutral-50">
-            Admin
-          </Link>
           <button data-testid="mobile-search-btn" className="md:hidden p-2" onClick={() => setSearchOpen(!searchOpen)}>
             <Search className="h-5 w-5 text-neutral-600" />
           </button>
@@ -197,10 +194,10 @@ export default function Header() {
             <Link to="/" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md">All Products</Link>
             <a href="tel:+917083898947" className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md flex items-center gap-2"><Phone className="h-4 w-4" /> +91 70838 98947</a>
             <a href="mailto:info.glannu@gmail.com" className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md">info.glannu@gmail.com</a>
-            <Link to="/admin/login" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 text-sm font-medium text-neutral-500 hover:bg-neutral-50 rounded-md">Admin</Link>
           </div>
         </nav>
       )}
     </header>
   );
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                        

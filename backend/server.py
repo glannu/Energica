@@ -374,10 +374,32 @@ async def create_product(product: ProductCreate, current_user = Depends(get_curr
     # Use image_url or default
     if not new_product.get("image_url"):
         new_product["image_url"] = DEFAULT_IMAGE_URL
+    new_product["id"] = str(uuid.uuid4())
     new_product["created_at"] = datetime.now(timezone.utc).isoformat()
-    result = await db.products.insert_one(new_product)
-    new_product["id"] = str(result.inserted_id)
+    await db.products.insert_one(new_product)
+    new_product.pop("_id", None)
     return new_product
+
+class RepairRequest(BaseModel):
+    item_codes: List[str] = []
+
+@api_router.post("/products/repair")
+async def repair_products(req: RepairRequest, admin=Depends(get_current_admin)):
+    """Backfill missing 'id' fields; dedupe given item_codes (keep oldest, soft-delete rest)."""
+    backfilled = 0
+    async for doc in db.products.find({"$or": [{"id": {"$exists": False}}, {"id": None}, {"id": ""}]}):
+        await db.products.update_one({"_id": doc["_id"]}, {"$set": {"id": str(doc["_id"])}})
+        backfilled += 1
+    deduped = 0
+    for code in req.item_codes:
+        docs = await db.products.find({"item_code": code, "deleted": {"$ne": True}}).sort("created_at", 1).to_list(None)
+        for doc in docs[1:]:
+            await db.products.update_one(
+                {"_id": doc["_id"]},
+                {"$set": {"deleted": True, "deleted_at": datetime.now(timezone.utc).isoformat()}}
+            )
+            deduped += 1
+    return {"backfilled_ids": backfilled, "soft_deleted_duplicates": deduped}
 
 @api_router.get("/products/bulk-export")
 async def bulk_export_products(admin=Depends(get_current_admin)):
@@ -651,36 +673,4 @@ async def update_rfq_status(rfq_id: str, body: RFQStatusUpdate, admin=Depends(ge
         raise HTTPException(status_code=400, detail="Invalid status. Must be pending, quoted, or completed.")
     result = await db.rfqs.update_one({"id": rfq_id}, {"$set": {"status": body.status}})
     if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="RFQ not found")
-    return {"message": "Status updated", "status": body.status}
-
-@api_router.delete("/rfq/{rfq_id}")
-async def delete_rfq(rfq_id: str, admin=Depends(get_current_admin)):
-    result = await db.rfqs.delete_one({"id": rfq_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="RFQ not found")
-    return {"message": "RFQ deleted"}
-
-# ─── INCLUDE ROUTER & MIDDLEWARE ───
-app.include_router(api_router)
-
-# Configure CORS based on environment
-cors_origins = os.environ.get('CORS_ORIGINS', '*')
-if cors_origins == '*':
-    # Development: allow all origins
-    allow_origins = ['*']
-else:
-    # Production: specific origins
-    allow_origins = [origin.strip() for origin in cors_origins.split(',')]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=allow_origins,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.on_event("shutdown")
-async def shutdown():
-    client.close()
+        rais
