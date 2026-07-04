@@ -43,6 +43,10 @@
       "dest": "/$1"
     },
     {
+      "src": "/(sitemap\\.xml|robots\\.txt)",
+      "dest": "/$1"
+    },
+    {
       "src": "/asset-manifest.json",
       "dest": "/asset-manifest.json"
     },

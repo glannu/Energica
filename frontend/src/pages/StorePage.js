@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import ProductCard from "@/components/ProductCard";
+import { setSEO } from "@/lib/seo";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -124,6 +125,21 @@ export default function StorePage() {
   }, []);
 
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
+
+  useEffect(() => {
+    const searchQ = searchParams.get("search");
+    if (selectedCategory) {
+      setSEO({
+        title: `${selectedCategory} \u2014 Buy Online at Wholesale Prices`,
+        description: `Shop ${selectedCategory.toLowerCase()} online at Glannu Solar Store, Pune. Genuine products, wholesale prices, shipping across India and Maharashtra.`,
+        canonical: `https://solar.glannu.com/?category=${encodeURIComponent(selectedCategory)}`,
+      });
+    } else if (searchQ) {
+      setSEO({ title: `Search: ${searchQ}`, canonical: "https://solar.glannu.com/" });
+    } else {
+      setSEO({ canonical: "https://solar.glannu.com/" });
+    }
+  }, [selectedCategory, searchParams]);
 
   useEffect(() => {
     fetchProducts(1, false);

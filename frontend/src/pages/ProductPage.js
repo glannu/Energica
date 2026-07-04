@@ -9,6 +9,7 @@ import { useQuote } from "@/context/QuoteContext";
 import { toast } from "sonner";
 import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@/components/Skeleton";
+import { setSEO } from "@/lib/seo";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const formatPrice = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
@@ -63,6 +64,35 @@ export default function ProductPage() {
       }
     }).catch(() => toast.error("Product not found")).finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    if (!product) return;
+    const brand = (product.specs && product.specs.Brand) || "Glannu";
+    setSEO({
+      title: `${product.name} \u2014 Price \u20b9${product.price}`,
+      description: `Buy ${product.name} online at \u20b9${product.price}. ${(product.description || "").slice(0, 120)} Ships across India from Pune, Maharashtra.`,
+      canonical: `https://solar.glannu.com/product/${product.id}`,
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: product.name,
+        image: product.image_url ? [product.image_url] : undefined,
+        description: product.description || product.name,
+        sku: product.item_code,
+        mpn: product.item_code,
+        brand: { "@type": "Brand", name: brand },
+        offers: {
+          "@type": "Offer",
+          url: `https://solar.glannu.com/product/${product.id}`,
+          priceCurrency: "INR",
+          price: product.price,
+          availability: product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          itemCondition: "https://schema.org/NewCondition",
+          seller: { "@type": "Organization", name: "Glannu Solar Store" }
+        }
+      }
+    });
+  }, [product]);
 
   const addToRecentlyViewed = (product) => {
     const viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
