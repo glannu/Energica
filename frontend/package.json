@@ -59,7 +59,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "node src/lib/refresh-data.js && node scripts/generate-sitemap.js && craco build",
+    "build": "node src/lib/refresh-data.js && node scripts/generate-sitemap.js && node scripts/generate-merchant-feed.js && craco build",
     "test": "craco test"
   },
   "browserslist": {

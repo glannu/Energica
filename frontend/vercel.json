@@ -43,7 +43,7 @@
       "dest": "/$1"
     },
     {
-      "src": "/(sitemap\\.xml|robots\\.txt)",
+      "src": "/(sitemap\\.xml|merchant-feed\\.xml|robots\\.txt)",
       "dest": "/$1"
     },
     {

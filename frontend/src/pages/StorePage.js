@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import ProductCard from "@/components/ProductCard";
+import TrustBadges from "@/components/TrustBadges";
 import { setSEO } from "@/lib/seo";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -243,6 +244,8 @@ export default function StorePage() {
           ))}
         </div>
       </div>
+
+      <TrustBadges className="mb-6" />
 
       <div className="space-y-6">
         {/* Categories Horizontal Scroll */}

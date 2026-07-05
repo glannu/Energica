@@ -9,6 +9,7 @@ import { useQuote } from "@/context/QuoteContext";
 import { toast } from "sonner";
 import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@/components/Skeleton";
+import TrustBadges from "@/components/TrustBadges";
 import { setSEO } from "@/lib/seo";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -304,6 +305,8 @@ export default function ProductPage() {
           </Button>
         </div>
       </div>
+
+      <TrustBadges className="mb-12" />
 
       {/* Features & Specs */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-16">
