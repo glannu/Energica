@@ -75,7 +75,7 @@ export default function ProductPage() {
     if (!product) return;
     const brand = (product.specs && product.specs.Brand) || "Glannu";
     setSEO({
-      title: `${product.name} \u2014 Price \u20b9${product.price}`,
+      title: `${product.name} - Price \u20b9${product.price}`,
       description: `Buy ${product.name} online at \u20b9${product.price}. ${(product.description || "").slice(0, 120)} Ships across India from Pune, Maharashtra.`,
       canonical: `https://solar.glannu.com/product/${product.id}`,
       jsonLd: {

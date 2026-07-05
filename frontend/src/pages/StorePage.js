@@ -56,7 +56,7 @@ export default function StorePage() {
     {
       image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=1200&q=80",
       title: "MC4 Connector Special",
-      subtitle: "Limited time offer — just ₹10/pair",
+      subtitle: "Limited time offer - just ₹10/pair",
       description: "Stock up on MC4 connectors at unbeatable prices. High-quality, weather-resistant connectors for all your solar installations.",
       badge: "Hot Deal",
       badgeIcon: <Zap className="h-3.5 w-3.5" />,
@@ -131,7 +131,7 @@ export default function StorePage() {
     const searchQ = searchParams.get("search");
     if (selectedCategory) {
       setSEO({
-        title: `${selectedCategory} \u2014 Buy Online at Wholesale Prices`,
+        title: `${selectedCategory} - Buy Online at Wholesale Prices`,
         description: `Shop ${selectedCategory.toLowerCase()} online at Glannu Solar Store, Pune. Genuine products, wholesale prices, shipping across India and Maharashtra.`,
         canonical: `https://solar.glannu.com/?category=${encodeURIComponent(selectedCategory)}`,
       });
@@ -174,7 +174,7 @@ export default function StorePage() {
     <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Hero Banner Carousel */}
       <div data-testid="store-hero" className="relative rounded-2xl overflow-hidden mb-8 shadow-xl" style={{ height: '320px' }}>
-        {/* All slides stacked — crossfade via opacity */}
+        {/* All slides stacked - crossfade via opacity */}
         {slides.map((slide, index) => (
           <div
             key={index}

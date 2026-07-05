@@ -5,7 +5,7 @@ const SITE = "Glannu Solar Store";
 export function setSEO({ title, description, canonical, jsonLd } = {}) {
   document.title = title
     ? `${title} | ${SITE}`
-    : `${SITE} \u2014 Solar Panels, Deye Inverters & BOS Components | Pune, India`;
+    : `${SITE} - Solar Panels, Deye Inverters & BOS Components | Pune, India`;
 
   if (description) {
     let m = document.querySelector('meta[name="description"]');

@@ -22,7 +22,7 @@ export default function CalculatorPage() {
 
   useMemo(() => {
     setSEO({
-      title: "Solar System Calculator — Size & Cost Estimate | Glannu",
+      title: "Solar System Calculator - Size & Cost Estimate | Glannu",
       description: "Free solar calculator: enter your monthly electricity bill to estimate the solar system size (kW), number of panels, approximate cost and monthly savings. Get a quote from Glannu, Pune.",
       canonical: "https://solar.glannu.com/calculator",
     });
@@ -134,7 +134,7 @@ export default function CalculatorPage() {
           <div className="grid grid-cols-2 gap-4">
             <Stat label="Recommended size" value={`${r.kw} kW`} big />
             <Stat label="Solar panels (≈550W)" value={`${r.panels} nos`} />
-            <Stat label="Approx. cost" value={`₹${fmt(r.costLo)}–${fmt(r.costHi)}`} />
+            <Stat label="Approx. cost" value={`₹${fmt(r.costLo)}-${fmt(r.costHi)}`} />
             <Stat label="Est. monthly savings" value={`₹${fmt(r.monthlySavings)}`} />
             <Stat label="Roof space needed" value={`~${fmt(r.roof)} sq.ft`} />
             <Stat label="Yearly generation" value={`~${fmt(r.annual)} units`} />

@@ -741,7 +741,7 @@ function RFQsTab() {
                   <a href={`tel:${rfq.customer_phone}`} className="flex items-center gap-1 text-blue-600 hover:underline">
                     <Phone className="h-3 w-3" />{rfq.customer_phone}
                   </a>
-                ) : '—'}
+                ) : '-'}
               </TableCell>
               <TableCell className="text-center">{rfq.items?.length || 0}</TableCell>
               <TableCell><Badge variant="outline" className="text-xs">{rfq.transit_mode}</Badge></TableCell>

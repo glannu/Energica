@@ -21,13 +21,13 @@ export default function CityPage() {
     if (!city) return;
     const url = `https://solar.glannu.com/stores/${city.slug}`;
     setSEO({
-      title: `Solar Panels & Inverters in ${city.name}, ${city.state} — Glannu Solar`,
+      title: `Solar Panels & Inverters in ${city.name}, ${city.state} - Glannu Solar`,
       description: `Buy genuine Deye inverters, solar panels, batteries & BOS in ${city.name}, ${city.state}. Glannu Solar delivers across ${city.name} with GST invoice and warranty support. Call +91 ${city.phone}.`,
       canonical: url,
       jsonLd: {
         "@context": "https://schema.org",
         "@type": "Store",
-        name: `Glannu Solar — ${city.name}`,
+        name: `Glannu Solar - ${city.name}`,
         image: "https://solar.glannu.com/glannu-logo.png",
         url,
         telephone: `+91${city.phone}`,
@@ -77,7 +77,7 @@ export default function CityPage() {
           <p className="text-neutral-600 leading-relaxed mb-6">
             Glannu Solar supplies genuine <strong>Deye inverters</strong>, solar panels, batteries and
             balance-of-system components across <strong>{city.name}, {city.state}</strong>. Get wholesale pricing,
-            proper GST invoice and manufacturer warranty support — shipped to {city.name} and nearby areas from our Pune base.
+            proper GST invoice and manufacturer warranty support - shipped to {city.name} and nearby areas from our Pune base.
           </p>
 
           <div className="rounded-2xl border border-neutral-200 p-5 mb-6">

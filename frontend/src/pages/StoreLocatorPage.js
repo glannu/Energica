@@ -11,7 +11,7 @@ export default function StoreLocatorPage() {
 
   useEffect(() => {
     setSEO({
-      title: "Store Locator — Solar Products Across 200+ Indian Cities | Glannu Solar",
+      title: "Store Locator - Solar Products Across 200+ Indian Cities | Glannu Solar",
       description: "Glannu Solar delivers Deye inverters, solar panels and BOS components across 200+ cities in India. Find your city for local enquiries, pricing and support.",
       canonical: "https://solar.glannu.com/stores",
     });
@@ -36,7 +36,7 @@ export default function StoreLocatorPage() {
         <span className="text-xs font-bold uppercase tracking-wider">Store Locator</span>
       </div>
       <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-2">
-        Glannu Solar near you — across India
+        Glannu Solar near you - across India
       </h1>
       <p className="text-neutral-600 text-sm sm:text-base mb-6 max-w-2xl">
         We supply Deye inverters, solar panels, batteries and balance-of-system components to
