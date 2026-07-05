@@ -47,6 +47,13 @@
       "dest": "/$1"
     },
     {
+      "src": "/datasheets/(.*\\.pdf)",
+      "headers": {
+        "cache-control": "public, max-age=604800"
+      },
+      "dest": "/datasheets/$1"
+    },
+    {
       "src": "/asset-manifest.json",
       "dest": "/asset-manifest.json"
     },

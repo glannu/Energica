@@ -148,6 +148,8 @@ export default function ProductPage() {
     });
   };
 
+  const datasheetUrl = product.specs && product.specs.Datasheet;
+
   const handleDatasheetRequest = () => {
     const msg = `Hello Glannu, I would like to request the datasheet for: ${product.name} (${product.item_code}). Please share it on my email/WhatsApp. Thank you!`;
     window.open(`https://wa.me/918605657016?text=${encodeURIComponent(msg)}`, '_blank');
@@ -264,8 +266,8 @@ export default function ProductPage() {
             >
               <Plus className="h-4 w-4 mr-2" /> Add to Quote
             </Button>
-            <Button variant="outline" className="py-4 sm:py-6" onClick={handleDatasheetRequest} data-testid="download-datasheet-btn">
-              <Download className="h-4 w-4 mr-2" /> Datasheet
+            <Button variant="outline" className="py-4 sm:py-6" onClick={() => datasheetUrl ? window.open(datasheetUrl, "_blank") : handleDatasheetRequest()} data-testid="download-datasheet-btn">
+              <Download className="h-4 w-4 mr-2" /> {datasheetUrl ? "View Datasheet" : "Datasheet"}
             </Button>
           </div>
 
@@ -288,6 +290,26 @@ export default function ProductPage() {
                 </li>
               ))}
             </ul>
+          </div>
+        )}
+        {product.specs && Object.keys(product.specs).filter(k => k !== "Datasheet").length > 0 && (
+          <div className="bg-neutral-50 rounded-xl p-4 sm:p-6 border border-neutral-100" data-testid="product-specs">
+            <h2 className="font-heading font-semibold text-base sm:text-lg text-neutral-900 mb-4">Specifications</h2>
+            <table className="w-full text-sm">
+              <tbody>
+                {Object.entries(product.specs).filter(([k]) => k !== "Datasheet").map(([k, v]) => (
+                  <tr key={k} className="border-b border-neutral-100 last:border-0">
+                    <td className="py-2 pr-4 text-neutral-500 align-top whitespace-nowrap">{k}</td>
+                    <td className="py-2 text-neutral-800 font-medium">{v}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {datasheetUrl && (
+              <a href={datasheetUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-4 text-sm font-medium text-brand-primary hover:underline">
+                <Download className="h-4 w-4" /> Full datasheet (PDF)
+              </a>
+            )}
           </div>
         )}
         {product.applications?.length > 0 && (
