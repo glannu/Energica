@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon, Download, FileSpreadsheet, Trash2, Phone, ArrowUpDown, ArrowUp, ArrowDown, X } from "lucide-react";
+import { Loader2, Search, Pencil, LogOut, Package, FileText, Upload, Image as ImageIcon, Download, FileSpreadsheet, Trash2, Phone, ArrowUpDown, ArrowUp, ArrowDown, X, Video } from "lucide-react";
 import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -385,6 +385,8 @@ function EditProductDialog({ product, onClose, onSave }) {
   const [imageUrl, setImageUrl] = useState(product.image_url || "");
   const [images, setImages] = useState(product.images || []);
   const [videos, setVideos] = useState(product.videos || []);
+  const [newImageUrl, setNewImageUrl] = useState("");
+  const [newVideoUrl, setNewVideoUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef(null);
@@ -474,6 +476,22 @@ function EditProductDialog({ product, onClose, onSave }) {
 
   const handleRemoveVideo = (index) => {
     setVideos(videos.filter((_, i) => i !== index));
+  };
+
+  const handleAddImageUrl = () => {
+    const u = newImageUrl.trim();
+    if (!u) return;
+    setImages([...images, u]);
+    setNewImageUrl("");
+    toast.success("Image link added");
+  };
+
+  const handleAddVideoUrl = () => {
+    const u = newVideoUrl.trim();
+    if (!u) return;
+    setVideos([...videos, u]);
+    setNewVideoUrl("");
+    toast.success("Video link added");
   };
 
   const handleSubmit = async () => {
@@ -566,6 +584,18 @@ function EditProductDialog({ product, onClose, onSave }) {
                   Upload Multiple Images
                 </Button>
               </div>
+              <div className="flex gap-2">
+                <Input
+                  data-testid="add-image-url-input"
+                  placeholder="Paste image URL (postimg, Drive, etc.)"
+                  value={newImageUrl}
+                  onChange={e => setNewImageUrl(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddImageUrl(); } }}
+                  className="flex-1"
+                />
+                <Button type="button" variant="outline" size="sm" onClick={handleAddImageUrl}>Add</Button>
+              </div>
+              <p className="text-xs text-neutral-500">Paste a direct image link and click Add. Links are more reliable than uploaded files on the current host.</p>
             </div>
           </div>
           <div>
@@ -575,7 +605,10 @@ function EditProductDialog({ product, onClose, onSave }) {
                 <div className="flex flex-wrap gap-2">
                   {videos.map((vid, idx) => (
                     <div key={idx} className="relative group">
-                      <video src={vid} className="w-16 h-16 object-cover rounded-lg border" />
+                      <div className="w-16 h-16 rounded-lg border bg-neutral-100 flex flex-col items-center justify-center" title={vid}>
+                        <Video className="h-5 w-5 text-neutral-500" />
+                        <span className="text-[8px] text-neutral-400 mt-0.5 px-1 truncate max-w-full">{/(youtube|youtu\.be)/i.test(vid) ? "YouTube" : /vimeo/i.test(vid) ? "Vimeo" : "Video"}</span>
+                      </div>
                       <button
                         onClick={() => handleRemoveVideo(idx)}
                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
@@ -588,25 +621,24 @@ function EditProductDialog({ product, onClose, onSave }) {
               )}
               <div className="flex gap-2">
                 <Input
-                  type="file"
-                  accept="video/*"
-                  onChange={handleVideoUpload}
-                  className="hidden"
-                  disabled={uploading}
-                  ref={videosInputRef}
+                  data-testid="add-video-url-input"
+                  placeholder="Paste YouTube / Vimeo / video URL"
+                  value={newVideoUrl}
+                  onChange={e => setNewVideoUrl(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddVideoUrl(); } }}
+                  className="flex-1"
                 />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => videosInputRef.current?.click()}
-                  disabled={uploading}
-                  className="w-full"
-                >
-                  {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
-                  Upload Video
-                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={handleAddVideoUrl}>Add</Button>
               </div>
+              <Input
+                type="file"
+                accept="video/*"
+                onChange={handleVideoUpload}
+                className="hidden"
+                disabled={uploading}
+                ref={videosInputRef}
+              />
+              <p className="text-xs text-neutral-500">Paste a YouTube/Vimeo or direct video link and click Add. YouTube links play inline on the product page.</p>
             </div>
           </div>
           <div>

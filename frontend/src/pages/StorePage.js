@@ -21,7 +21,7 @@ export default function StorePage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "");
-  const [sort, setSort] = useState("name_asc");
+  const [sort, setSort] = useState("price_asc");
   const [stockFilter, setStockFilter] = useState("");
   const [mobileSidebar, setMobileSidebar] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);

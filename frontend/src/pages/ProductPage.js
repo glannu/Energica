@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import { ChevronRight, Plus, Minus, Download, CheckCircle, XCircle, ArrowLeft, MessageCircle, ChevronLeft, ChevronRight as ChevronRightIcon } from "lucide-react";
+import { ChevronRight, Plus, Minus, Download, CheckCircle, XCircle, ArrowLeft, MessageCircle, ChevronLeft, ChevronRight as ChevronRightIcon, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -13,6 +13,17 @@ import { setSEO } from "@/lib/seo";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const formatPrice = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
+
+// Turn a video URL into either an embeddable player (YouTube/Vimeo) or a direct file source.
+const getVideoInfo = (url) => {
+  if (!url) return { kind: "file", src: "", thumb: null };
+  const u = url.trim();
+  let m = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([\w-]{11})/);
+  if (m) return { kind: "embed", src: `https://www.youtube.com/embed/${m[1]}`, thumb: `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg` };
+  m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (m) return { kind: "embed", src: `https://player.vimeo.com/video/${m[1]}`, thumb: null };
+  return { kind: "file", src: u, thumb: null };
+};
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -34,25 +45,19 @@ export default function ProductPage() {
       // Add to recently viewed
       addToRecentlyViewed(data);
 
-      // Build media gallery - always include image_url first if it exists
+      // Build media gallery - images first (deduped), then videos (deduped).
       const media = [];
-      if (data.image_url && data.image_url.trim()) {
-        media.push({ type: 'image', url: data.image_url });
-      }
-      if (data.images && data.images.length > 0) {
-        data.images.forEach(img => {
-          if (img && img.trim() && img !== data.image_url) {
-            media.push({ type: 'image', url: img });
-          }
-        });
-      }
-      if (data.videos && data.videos.length > 0) {
-        data.videos.forEach(vid => {
-          if (vid && vid.trim()) {
-            media.push({ type: 'video', url: vid });
-          }
-        });
-      }
+      const seen = new Set();
+      const addImage = (u) => {
+        const url = (u || "").trim();
+        if (url && !seen.has(url)) { seen.add(url); media.push({ type: "image", url }); }
+      };
+      addImage(data.image_url);
+      (data.images || []).forEach(addImage);
+      (data.videos || []).forEach((v) => {
+        const url = (v || "").trim();
+        if (url && !seen.has(url)) { seen.add(url); media.push({ type: "video", url, video: getVideoInfo(url) }); }
+      });
       setAllMedia(media);
       setCurrentMediaIndex(0);
 
@@ -182,18 +187,32 @@ export default function ProductPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 mb-16">
         {/* Image Gallery */}
         <div className="space-y-3">
-          <div className="bg-neutral-50 rounded-2xl p-4 sm:p-8 flex items-center justify-center border border-neutral-100 aspect-square lg:aspect-auto lg:min-h-[400px] relative" data-testid="product-image-container">
+          <div className="bg-neutral-50 rounded-2xl p-4 sm:p-8 flex items-center justify-center border border-neutral-100 aspect-square lg:aspect-auto lg:min-h-[400px] relative overflow-hidden" data-testid="product-image-container">
             {allMedia[currentMediaIndex]?.type === 'video' ? (
-              <video
-                src={allMedia[currentMediaIndex].url}
-                controls
-                className="max-h-60 sm:max-h-80 max-w-full object-contain"
-              />
+              allMedia[currentMediaIndex].video?.kind === 'embed' ? (
+                <div className="w-full aspect-video max-h-full">
+                  <iframe
+                    src={allMedia[currentMediaIndex].video.src}
+                    title={product.name}
+                    className="w-full h-full rounded-lg"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              ) : (
+                <video
+                  src={allMedia[currentMediaIndex].url}
+                  controls
+                  className="max-h-60 sm:max-h-80 max-w-full object-contain"
+                />
+              )
             ) : (
               <img
                 src={allMedia[currentMediaIndex]?.url || product.image_url}
                 alt={product.name}
                 className="max-h-60 sm:max-h-80 max-w-full object-contain"
+                onError={(e) => { if (product.image_url && e.currentTarget.src !== product.image_url) { e.currentTarget.src = product.image_url; } }}
               />
             )}
           </div>
@@ -203,14 +222,23 @@ export default function ProductPage() {
                 <button
                   key={index}
                   onClick={() => handleMediaClick(index)}
-                  className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 ${
+                  className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 ${
                     currentMediaIndex === index ? 'border-brand-primary' : 'border-neutral-200'
                   }`}
                 >
                   {media.type === 'video' ? (
-                    <video src={media.url} className="w-full h-full object-cover" />
+                    <>
+                      {media.video?.thumb ? (
+                        <img src={media.video.thumb} alt={`Video ${index + 1}`} className="w-full h-full object-cover" />
+                      ) : (
+                        <video src={media.url} className="w-full h-full object-cover" />
+                      )}
+                      <span className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <PlayCircle className="h-6 w-6 text-white" />
+                      </span>
+                    </>
                   ) : (
-                    <img src={media.url} alt={`Media ${index + 1}`} className="w-full h-full object-cover" />
+                    <img src={media.url} alt={`Media ${index + 1}`} className="w-full h-full object-cover" onError={(e) => { if (e.currentTarget.parentElement) e.currentTarget.parentElement.style.display = 'none'; }} />
                   )}
                 </button>
               ))}
