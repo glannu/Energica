@@ -9,6 +9,8 @@ import CheckoutPage from "@/pages/CheckoutPage";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminPage from "@/pages/AdminPage";
 import CalculatorPage from "@/pages/CalculatorPage";
+import StoreLocatorPage from "@/pages/StoreLocatorPage";
+import CityPage from "@/pages/CityPage";
 import FloatingContact from "@/components/FloatingContact";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -25,6 +27,8 @@ function App() {
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/calculator" element={<CalculatorPage />} />
+            <Route path="/stores" element={<StoreLocatorPage />} />
+            <Route path="/stores/:slug" element={<CityPage />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminPage />} />
           </Routes>

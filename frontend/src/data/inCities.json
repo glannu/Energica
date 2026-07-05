@@ -1,0 +1,1802 @@
+[
+{
+"name": "Mumbai",
+"slug": "mumbai",
+"state": "Maharashtra",
+"lat": 19.0728,
+"lng": 72.8826,
+"phone": "7083898947",
+"population": 12691836
+},
+{
+"name": "Delhi",
+"slug": "delhi",
+"state": "Delhi",
+"lat": 28.6519,
+"lng": 77.2315,
+"phone": "8261963374",
+"population": 11034555
+},
+{
+"name": "Bengaluru",
+"slug": "bengaluru",
+"state": "Karnataka",
+"lat": 12.9719,
+"lng": 77.5937,
+"phone": "7083898947",
+"population": 8495492
+},
+{
+"name": "Hyderabad",
+"slug": "hyderabad",
+"state": "Telangana",
+"lat": 17.384,
+"lng": 78.4564,
+"phone": "8261963374",
+"population": 6993262
+},
+{
+"name": "Ahmedabad",
+"slug": "ahmedabad",
+"state": "Gujarat",
+"lat": 23.0258,
+"lng": 72.5873,
+"phone": "7083898947",
+"population": 6357693
+},
+{
+"name": "Chennai",
+"slug": "chennai",
+"state": "Tamil Nadu",
+"lat": 13.0878,
+"lng": 80.2785,
+"phone": "8261963374",
+"population": 4681087
+},
+{
+"name": "Kolkata",
+"slug": "kolkata",
+"state": "West Bengal",
+"lat": 22.5626,
+"lng": 88.363,
+"phone": "7083898947",
+"population": 4631392
+},
+{
+"name": "Surat",
+"slug": "surat",
+"state": "Gujarat",
+"lat": 21.1959,
+"lng": 72.8302,
+"phone": "8261963374",
+"population": 4591246
+},
+{
+"name": "Pune",
+"slug": "pune",
+"state": "Maharashtra",
+"lat": 18.5196,
+"lng": 73.8554,
+"phone": "7083898947",
+"population": 3124458
+},
+{
+"name": "Jaipur",
+"slug": "jaipur",
+"state": "Rajasthan",
+"lat": 26.9196,
+"lng": 75.7878,
+"phone": "8261963374",
+"population": 3046163
+},
+{
+"name": "Kanpur",
+"slug": "kanpur",
+"state": "Uttar Pradesh",
+"lat": 26.4652,
+"lng": 80.3498,
+"phone": "7083898947",
+"population": 2823249
+},
+{
+"name": "Navi Mumbai",
+"slug": "navi-mumbai",
+"state": "Maharashtra",
+"lat": 19.0368,
+"lng": 73.0158,
+"phone": "8261963374",
+"population": 2600000
+},
+{
+"name": "Lucknow",
+"slug": "lucknow",
+"state": "Uttar Pradesh",
+"lat": 26.8393,
+"lng": 80.9231,
+"phone": "7083898947",
+"population": 2472011
+},
+{
+"name": "Nagpur",
+"slug": "nagpur",
+"state": "Maharashtra",
+"lat": 21.1463,
+"lng": 79.0849,
+"phone": "8261963374",
+"population": 2405665
+},
+{
+"name": "Coimbatore",
+"slug": "coimbatore",
+"state": "Tamil Nadu",
+"lat": 11.0055,
+"lng": 76.9661,
+"phone": "7083898947",
+"population": 2136916
+},
+{
+"name": "Indore",
+"slug": "indore",
+"state": "Madhya Pradesh",
+"lat": 22.7179,
+"lng": 75.8333,
+"phone": "8261963374",
+"population": 1994397
+},
+{
+"name": "Thane",
+"slug": "thane",
+"state": "Maharashtra",
+"lat": 19.197,
+"lng": 72.9635,
+"phone": "7083898947",
+"population": 1841488
+},
+{
+"name": "Vadodara",
+"slug": "vadodara",
+"state": "Gujarat",
+"lat": 22.2994,
+"lng": 73.2081,
+"phone": "8261963374",
+"population": 1822221
+},
+{
+"name": "Bhopal",
+"slug": "bhopal",
+"state": "Madhya Pradesh",
+"lat": 23.2547,
+"lng": 77.4029,
+"phone": "7083898947",
+"population": 1798218
+},
+{
+"name": "Pimpri-Chinchwad",
+"slug": "pimpri-chinchwad",
+"state": "Maharashtra",
+"lat": 18.6187,
+"lng": 73.8037,
+"phone": "8261963374",
+"population": 1727692
+},
+{
+"name": "Patna",
+"slug": "patna",
+"state": "Bihar",
+"lat": 25.5941,
+"lng": 85.1356,
+"phone": "7083898947",
+"population": 1684297
+},
+{
+"name": "Kallakurichi",
+"slug": "kallakurichi",
+"state": "Tamil Nadu",
+"lat": 11.7338,
+"lng": 78.9592,
+"phone": "8261963374",
+"population": 1682687
+},
+{
+"name": "Ludhiana",
+"slug": "ludhiana",
+"state": "Punjab",
+"lat": 30.912,
+"lng": 75.8538,
+"phone": "7083898947",
+"population": 1618879
+},
+{
+"name": "Nashik",
+"slug": "nashik",
+"state": "Maharashtra",
+"lat": 19.9973,
+"lng": 73.791,
+"phone": "8261963374",
+"population": 1486053
+},
+{
+"name": "Madurai",
+"slug": "madurai",
+"state": "Tamil Nadu",
+"lat": 9.919,
+"lng": 78.1195,
+"phone": "7083898947",
+"population": 1465625
+},
+{
+"name": "Tirunelveli",
+"slug": "tirunelveli",
+"state": "Tamil Nadu",
+"lat": 8.7274,
+"lng": 77.6838,
+"phone": "8261963374",
+"population": 1435844
+},
+{
+"name": "Agra",
+"slug": "agra",
+"state": "Uttar Pradesh",
+"lat": 27.1833,
+"lng": 78.0167,
+"phone": "7083898947",
+"population": 1430055
+},
+{
+"name": "Faridabad",
+"slug": "faridabad",
+"state": "Haryana",
+"lat": 28.4112,
+"lng": 77.3132,
+"phone": "8261963374",
+"population": 1414050
+},
+{
+"name": "Rajkot",
+"slug": "rajkot",
+"state": "Gujarat",
+"lat": 22.2916,
+"lng": 70.7932,
+"phone": "7083898947",
+"population": 1390640
+},
+{
+"name": "Jamshedpur",
+"slug": "jamshedpur",
+"state": "Jharkhand",
+"lat": 22.8028,
+"lng": 86.1855,
+"phone": "8261963374",
+"population": 1339438
+},
+{
+"name": "Gorakhpur",
+"slug": "gorakhpur",
+"state": "Haryana",
+"lat": 29.4477,
+"lng": 75.6721,
+"phone": "7083898947",
+"population": 1324570
+},
+{
+"name": "Kalyan",
+"slug": "kalyan",
+"state": "Maharashtra",
+"lat": 19.2437,
+"lng": 73.1355,
+"phone": "8261963374",
+"population": 1262255
+},
+{
+"name": "Dombivali",
+"slug": "dombivali",
+"state": "Maharashtra",
+"lat": 19.2167,
+"lng": 73.0833,
+"phone": "7083898947",
+"population": 1247327
+},
+{
+"name": "Meerut",
+"slug": "meerut",
+"state": "Uttar Pradesh",
+"lat": 28.98,
+"lng": 77.7064,
+"phone": "8261963374",
+"population": 1223184
+},
+{
+"name": "Virar",
+"slug": "virar",
+"state": "Maharashtra",
+"lat": 19.4559,
+"lng": 72.8114,
+"phone": "7083898947",
+"population": 1222390
+},
+{
+"name": "Nowrangapur",
+"slug": "nowrangapur",
+"state": "Odisha",
+"lat": 19.2311,
+"lng": 82.5483,
+"phone": "8261963374",
+"population": 1220946
+},
+{
+"name": "Srinagar",
+"slug": "srinagar",
+"state": "Jammu and Kashmir",
+"lat": 34.0857,
+"lng": 74.8055,
+"phone": "7083898947",
+"population": 1206419
+},
+{
+"name": "Ghaziabad",
+"slug": "ghaziabad",
+"state": "Uttar Pradesh",
+"lat": 28.6654,
+"lng": 77.4391,
+"phone": "8261963374",
+"population": 1199191
+},
+{
+"name": "Dhanbad",
+"slug": "dhanbad",
+"state": "Jharkhand",
+"lat": 23.7976,
+"lng": 86.4299,
+"phone": "7083898947",
+"population": 1196214
+},
+{
+"name": "Aurangabad",
+"slug": "aurangabad",
+"state": "Maharashtra",
+"lat": 19.8776,
+"lng": 75.3423,
+"phone": "8261963374",
+"population": 1175116
+},
+{
+"name": "Varanasi",
+"slug": "varanasi",
+"state": "Uttar Pradesh",
+"lat": 25.3167,
+"lng": 83.0104,
+"phone": "7083898947",
+"population": 1164404
+},
+{
+"name": "Amritsar",
+"slug": "amritsar",
+"state": "Punjab",
+"lat": 31.6223,
+"lng": 74.8753,
+"phone": "8261963374",
+"population": 1159227
+},
+{
+"name": "Vijayawada",
+"slug": "vijayawada",
+"state": "Andhra Pradesh",
+"lat": 16.5074,
+"lng": 80.6466,
+"phone": "7083898947",
+"population": 1143232
+},
+{
+"name": "Ranchi",
+"slug": "ranchi",
+"state": "Jharkhand",
+"lat": 23.3432,
+"lng": 85.3094,
+"phone": "8261963374",
+"population": 1120374
+},
+{
+"name": "Jabalpur",
+"slug": "jabalpur",
+"state": "Madhya Pradesh",
+"lat": 23.167,
+"lng": 79.9501,
+"phone": "7083898947",
+"population": 1081677
+},
+{
+"name": "Prayagraj",
+"slug": "prayagraj",
+"state": "Uttar Pradesh",
+"lat": 25.4448,
+"lng": 81.8432,
+"phone": "8261963374",
+"population": 1073438
+},
+{
+"name": "Visakhapatnam",
+"slug": "visakhapatnam",
+"state": "Andhra Pradesh",
+"lat": 17.6801,
+"lng": 83.2016,
+"phone": "7083898947",
+"population": 1063178
+},
+{
+"name": "Jodhpur",
+"slug": "jodhpur",
+"state": "Rajasthan",
+"lat": 26.2684,
+"lng": 73.0059,
+"phone": "8261963374",
+"population": 1056191
+},
+{
+"name": "Gwalior",
+"slug": "gwalior",
+"state": "Madhya Pradesh",
+"lat": 26.2298,
+"lng": 78.1734,
+"phone": "7083898947",
+"population": 1054420
+},
+{
+"name": "Theni",
+"slug": "theni",
+"state": "Tamil Nadu",
+"lat": 10.0112,
+"lng": 77.4777,
+"phone": "8261963374",
+"population": 1034724
+},
+{
+"name": "Howrah",
+"slug": "howrah",
+"state": "West Bengal",
+"lat": 22.5769,
+"lng": 88.3186,
+"phone": "7083898947",
+"population": 1027672
+},
+{
+"name": "Raipur",
+"slug": "raipur",
+"state": "Chhattisgarh",
+"lat": 21.2333,
+"lng": 81.6333,
+"phone": "8261963374",
+"population": 1027264
+},
+{
+"name": "Tiruchirappalli",
+"slug": "tiruchirappalli",
+"state": "Tamil Nadu",
+"lat": 10.8155,
+"lng": 78.6965,
+"phone": "7083898947",
+"population": 1022518
+},
+{
+"name": "Kota",
+"slug": "kota",
+"state": "Rajasthan",
+"lat": 25.1825,
+"lng": 75.8391,
+"phone": "8261963374",
+"population": 1001694
+},
+{
+"name": "Solapur",
+"slug": "solapur",
+"state": "Maharashtra",
+"lat": 17.6715,
+"lng": 75.9104,
+"phone": "7083898947",
+"population": 997281
+},
+{
+"name": "Chandigarh",
+"slug": "chandigarh",
+"state": "Chandigarh",
+"lat": 30.7363,
+"lng": 76.7884,
+"phone": "8261963374",
+"population": 970602
+},
+{
+"name": "Tiruppur",
+"slug": "tiruppur",
+"state": "Tamil Nadu",
+"lat": 11.1154,
+"lng": 77.3546,
+"phone": "7083898947",
+"population": 963173
+},
+{
+"name": "Guwahati",
+"slug": "guwahati",
+"state": "Assam",
+"lat": 26.1844,
+"lng": 91.7458,
+"phone": "8261963374",
+"population": 962334
+},
+{
+"name": "Hubballi",
+"slug": "hubballi",
+"state": "Karnataka",
+"lat": 15.3478,
+"lng": 75.1338,
+"phone": "7083898947",
+"population": 943788
+},
+{
+"name": "Mysuru",
+"slug": "mysuru",
+"state": "Karnataka",
+"lat": 12.2979,
+"lng": 76.6393,
+"phone": "8261963374",
+"population": 920550
+},
+{
+"name": "Salem",
+"slug": "salem",
+"state": "Tamil Nadu",
+"lat": 11.6538,
+"lng": 78.1554,
+"phone": "7083898947",
+"population": 917414
+},
+{
+"name": "Gurugram",
+"slug": "gurugram",
+"state": "Haryana",
+"lat": 28.4601,
+"lng": 77.0263,
+"phone": "8261963374",
+"population": 886519
+},
+{
+"name": "Bhubaneswar",
+"slug": "bhubaneswar",
+"state": "Odisha",
+"lat": 20.2724,
+"lng": 85.8338,
+"phone": "7083898947",
+"population": 885363
+},
+{
+"name": "Bhiwandi",
+"slug": "bhiwandi",
+"state": "Maharashtra",
+"lat": 19.3002,
+"lng": 73.0588,
+"phone": "8261963374",
+"population": 874032
+},
+{
+"name": "Jalandhar",
+"slug": "jalandhar",
+"state": "Punjab",
+"lat": 31.3256,
+"lng": 75.5792,
+"phone": "7083898947",
+"population": 868929
+},
+{
+"name": "Bhayandar",
+"slug": "bhayandar",
+"state": "Maharashtra",
+"lat": 19.3016,
+"lng": 72.8511,
+"phone": "8261963374",
+"population": 809378
+},
+{
+"name": "Thiruvananthapuram",
+"slug": "thiruvananthapuram",
+"state": "Kerala",
+"lat": 8.4855,
+"lng": 76.9492,
+"phone": "7083898947",
+"population": 788271
+},
+{
+"name": "Aligarh",
+"slug": "aligarh",
+"state": "Uttar Pradesh",
+"lat": 27.8815,
+"lng": 78.0746,
+"phone": "8261963374",
+"population": 753207
+},
+{
+"name": "Bareilly",
+"slug": "bareilly",
+"state": "Uttar Pradesh",
+"lat": 28.3668,
+"lng": 79.4317,
+"phone": "7083898947",
+"population": 745435
+},
+{
+"name": "Moradabad",
+"slug": "moradabad",
+"state": "Uttar Pradesh",
+"lat": 28.8389,
+"lng": 78.7768,
+"phone": "8261963374",
+"population": 721139
+},
+{
+"name": "Warangal",
+"slug": "warangal",
+"state": "Telangana",
+"lat": 18.0,
+"lng": 79.5833,
+"phone": "7083898947",
+"population": 704570
+},
+{
+"name": "Guntur",
+"slug": "guntur",
+"state": "Andhra Pradesh",
+"lat": 16.2997,
+"lng": 80.4573,
+"phone": "8261963374",
+"population": 670073
+},
+{
+"name": "Puducherry",
+"slug": "puducherry",
+"state": "Puducherry",
+"lat": 11.9338,
+"lng": 79.8298,
+"phone": "7083898947",
+"population": 657209
+},
+{
+"name": "Amravati",
+"slug": "amravati",
+"state": "Maharashtra",
+"lat": 20.9333,
+"lng": 77.75,
+"phone": "8261963374",
+"population": 647057
+},
+{
+"name": "Bikaner",
+"slug": "bikaner",
+"state": "Rajasthan",
+"lat": 28.0176,
+"lng": 73.3149,
+"phone": "7083898947",
+"population": 644406
+},
+{
+"name": "Kochi",
+"slug": "kochi",
+"state": "Kerala",
+"lat": 9.9399,
+"lng": 76.2602,
+"phone": "8261963374",
+"population": 633553
+},
+{
+"name": "Bhilai",
+"slug": "bhilai",
+"state": "Chhattisgarh",
+"lat": 21.2092,
+"lng": 81.4285,
+"phone": "7083898947",
+"population": 627734
+},
+{
+"name": "Cuttack",
+"slug": "cuttack",
+"state": "Odisha",
+"lat": 20.465,
+"lng": 85.8793,
+"phone": "8261963374",
+"population": 610189
+},
+{
+"name": "Borivli",
+"slug": "borivli",
+"state": "Maharashtra",
+"lat": 19.235,
+"lng": 72.8598,
+"phone": "7083898947",
+"population": 609617
+},
+{
+"name": "Bhavnagar",
+"slug": "bhavnagar",
+"state": "Gujarat",
+"lat": 21.7629,
+"lng": 72.1533,
+"phone": "8261963374",
+"population": 605882
+},
+{
+"name": "Sangli",
+"slug": "sangli",
+"state": "Maharashtra",
+"lat": 16.8544,
+"lng": 74.5642,
+"phone": "7083898947",
+"population": 601214
+},
+{
+"name": "Jamnagar",
+"slug": "jamnagar",
+"state": "Gujarat",
+"lat": 22.4729,
+"lng": 70.0667,
+"phone": "8261963374",
+"population": 600943
+},
+{
+"name": "Jammu",
+"slug": "jammu",
+"state": "Jammu and Kashmir",
+"lat": 32.7353,
+"lng": 74.8617,
+"phone": "7083898947",
+"population": 576198
+},
+{
+"name": "Bokaro",
+"slug": "bokaro",
+"state": "Jharkhand",
+"lat": 23.6693,
+"lng": 86.1516,
+"phone": "8261963374",
+"population": 564319
+},
+{
+"name": "Nanded",
+"slug": "nanded",
+"state": "Maharashtra",
+"lat": 19.1602,
+"lng": 77.315,
+"phone": "7083898947",
+"population": 550564
+},
+{
+"name": "Kozhikode",
+"slug": "kozhikode",
+"state": "Kerala",
+"lat": 11.248,
+"lng": 75.7804,
+"phone": "8261963374",
+"population": 550440
+},
+{
+"name": "Kolhapur",
+"slug": "kolhapur",
+"state": "Maharashtra",
+"lat": 16.6956,
+"lng": 74.2317,
+"phone": "7083898947",
+"population": 549236
+},
+{
+"name": "Nellore",
+"slug": "nellore",
+"state": "Andhra Pradesh",
+"lat": 14.4499,
+"lng": 79.987,
+"phone": "8261963374",
+"population": 547621
+},
+{
+"name": "Kalaburagi",
+"slug": "kalaburagi",
+"state": "Karnataka",
+"lat": 17.3358,
+"lng": 76.8376,
+"phone": "7083898947",
+"population": 543147
+},
+{
+"name": "Ajmer",
+"slug": "ajmer",
+"state": "Rajasthan",
+"lat": 26.4521,
+"lng": 74.6387,
+"phone": "8261963374",
+"population": 542321
+},
+{
+"name": "Dehradun",
+"slug": "dehradun",
+"state": "Uttarakhand",
+"lat": 30.3244,
+"lng": 78.0339,
+"phone": "7083898947",
+"population": 522081
+},
+{
+"name": "Erode",
+"slug": "erode",
+"state": "Tamil Nadu",
+"lat": 11.3428,
+"lng": 77.7274,
+"phone": "8261963374",
+"population": 521891
+},
+{
+"name": "Durgapur",
+"slug": "durgapur",
+"state": "West Bengal",
+"lat": 23.5158,
+"lng": 87.308,
+"phone": "7083898947",
+"population": 518872
+},
+{
+"name": "Ulhasnagar",
+"slug": "ulhasnagar",
+"state": "Maharashtra",
+"lat": 19.2167,
+"lng": 73.15,
+"phone": "8261963374",
+"population": 516584
+},
+{
+"name": "Siliguri",
+"slug": "siliguri",
+"state": "West Bengal",
+"lat": 26.71,
+"lng": 88.4285,
+"phone": "7083898947",
+"population": 515574
+},
+{
+"name": "Ujjain",
+"slug": "ujjain",
+"state": "Madhya Pradesh",
+"lat": 23.1824,
+"lng": 75.7764,
+"phone": "8261963374",
+"population": 515215
+},
+{
+"name": "Bilimora",
+"slug": "bilimora",
+"state": "Gujarat",
+"lat": 20.7696,
+"lng": 72.9613,
+"phone": "7083898947",
+"population": 510879
+},
+{
+"name": "Asansol",
+"slug": "asansol",
+"state": "West Bengal",
+"lat": 23.6833,
+"lng": 86.9833,
+"phone": "8261963374",
+"population": 504271
+},
+{
+"name": "Mangaluru",
+"slug": "mangaluru",
+"state": "Karnataka",
+"lat": 12.9172,
+"lng": 74.856,
+"phone": "7083898947",
+"population": 499487
+},
+{
+"name": "Belagavi",
+"slug": "belagavi",
+"state": "Karnataka",
+"lat": 15.8521,
+"lng": 74.5045,
+"phone": "8261963374",
+"population": 490045
+},
+{
+"name": "Saharanpur",
+"slug": "saharanpur",
+"state": "Uttar Pradesh",
+"lat": 29.9679,
+"lng": 77.5452,
+"phone": "7083898947",
+"population": 484873
+},
+{
+"name": "Vellore",
+"slug": "vellore",
+"state": "Tamil Nadu",
+"lat": 12.9184,
+"lng": 79.1325,
+"phone": "8261963374",
+"population": 484690
+},
+{
+"name": "Bhatpara",
+"slug": "bhatpara",
+"state": "West Bengal",
+"lat": 22.8664,
+"lng": 88.4011,
+"phone": "7083898947",
+"population": 483129
+},
+{
+"name": "Malegaon",
+"slug": "malegaon",
+"state": "Maharashtra",
+"lat": 20.5497,
+"lng": 74.5346,
+"phone": "8261963374",
+"population": 481228
+},
+{
+"name": "Gaya",
+"slug": "gaya",
+"state": "Bihar",
+"lat": 24.7969,
+"lng": 85.0038,
+"phone": "7083898947",
+"population": 474093
+},
+{
+"name": "Ambattur",
+"slug": "ambattur",
+"state": "Tamil Nadu",
+"lat": 13.0982,
+"lng": 80.1615,
+"phone": "8261963374",
+"population": 466205
+},
+{
+"name": "Jalgaon",
+"slug": "jalgaon",
+"state": "Maharashtra",
+"lat": 21.0029,
+"lng": 75.566,
+"phone": "7083898947",
+"population": 460228
+},
+{
+"name": "Kurnool",
+"slug": "kurnool",
+"state": "Andhra Pradesh",
+"lat": 15.8289,
+"lng": 78.036,
+"phone": "8261963374",
+"population": 460184
+},
+{
+"name": "Ramgundam",
+"slug": "ramgundam",
+"state": "Telangana",
+"lat": 18.8008,
+"lng": 79.4521,
+"phone": "7083898947",
+"population": 452261
+},
+{
+"name": "Udaipur",
+"slug": "udaipur",
+"state": "Rajasthan",
+"lat": 24.5858,
+"lng": 73.7135,
+"phone": "8261963374",
+"population": 451100
+},
+{
+"name": "Maheshtala",
+"slug": "maheshtala",
+"state": "West Bengal",
+"lat": 22.5086,
+"lng": 88.2532,
+"phone": "7083898947",
+"population": 448317
+},
+{
+"name": "Patiala",
+"slug": "patiala",
+"state": "Punjab",
+"lat": 30.3362,
+"lng": 76.3922,
+"phone": "8261963374",
+"population": 446246
+},
+{
+"name": "Shyamnagar",
+"slug": "shyamnagar",
+"state": "West Bengal",
+"lat": 22.8333,
+"lng": 88.3667,
+"phone": "7083898947",
+"population": 441956
+},
+{
+"name": "Davangere",
+"slug": "davangere",
+"state": "Karnataka",
+"lat": 14.4669,
+"lng": 75.9269,
+"phone": "8261963374",
+"population": 435128
+},
+{
+"name": "Akola",
+"slug": "akola",
+"state": "Maharashtra",
+"lat": 20.7096,
+"lng": 76.9981,
+"phone": "7083898947",
+"population": 428857
+},
+{
+"name": "Rajpur Sonarpur",
+"slug": "rajpur-sonarpur",
+"state": "West Bengal",
+"lat": 22.4382,
+"lng": 88.4321,
+"phone": "8261963374",
+"population": 424368
+},
+{
+"name": "Korba",
+"slug": "korba",
+"state": "Chhattisgarh",
+"lat": 22.3458,
+"lng": 82.6963,
+"phone": "7083898947",
+"population": 419146
+},
+{
+"name": "Jhansi",
+"slug": "jhansi",
+"state": "Uttar Pradesh",
+"lat": 25.4589,
+"lng": 78.5799,
+"phone": "8261963374",
+"population": 412927
+},
+{
+"name": "Thoothukudi",
+"slug": "thoothukudi",
+"state": "Tamil Nadu",
+"lat": 8.7674,
+"lng": 78.1342,
+"phone": "7083898947",
+"population": 410760
+},
+{
+"name": "Ballari",
+"slug": "ballari",
+"state": "Karnataka",
+"lat": 15.142,
+"lng": 76.924,
+"phone": "8261963374",
+"population": 410445
+},
+{
+"name": "Bhagalpur",
+"slug": "bhagalpur",
+"state": "Bihar",
+"lat": 25.2445,
+"lng": 86.9718,
+"phone": "7083898947",
+"population": 400146
+},
+{
+"name": "Agartala",
+"slug": "agartala",
+"state": "Tripura",
+"lat": 23.8361,
+"lng": 91.2794,
+"phone": "8261963374",
+"population": 400004
+},
+{
+"name": "Kakinada",
+"slug": "kakinada",
+"state": "Andhra Pradesh",
+"lat": 16.9604,
+"lng": 82.2381,
+"phone": "7083898947",
+"population": 384182
+},
+{
+"name": "Latur",
+"slug": "latur",
+"state": "Maharashtra",
+"lat": 18.3972,
+"lng": 76.5678,
+"phone": "8261963374",
+"population": 382940
+},
+{
+"name": "Panihati",
+"slug": "panihati",
+"state": "West Bengal",
+"lat": 22.6909,
+"lng": 88.374,
+"phone": "7083898947",
+"population": 378705
+},
+{
+"name": "Rajahmundry",
+"slug": "rajahmundry",
+"state": "Andhra Pradesh",
+"lat": 17.0052,
+"lng": 81.7778,
+"phone": "8261963374",
+"population": 376333
+},
+{
+"name": "Dhule",
+"slug": "dhule",
+"state": "Maharashtra",
+"lat": 20.9013,
+"lng": 74.7774,
+"phone": "7083898947",
+"population": 375559
+},
+{
+"name": "Rohtak",
+"slug": "rohtak",
+"state": "Haryana",
+"lat": 28.8945,
+"lng": 76.5892,
+"phone": "8261963374",
+"population": 374292
+},
+{
+"name": "Ahmednagar",
+"slug": "ahmednagar",
+"state": "Maharashtra",
+"lat": 19.0946,
+"lng": 74.7384,
+"phone": "7083898947",
+"population": 367140
+},
+{
+"name": "Kollam",
+"slug": "kollam",
+"state": "Kerala",
+"lat": 8.8811,
+"lng": 76.5847,
+"phone": "8261963374",
+"population": 367107
+},
+{
+"name": "Bilaspur",
+"slug": "bilaspur",
+"state": "Chhattisgarh",
+"lat": 22.08,
+"lng": 82.1554,
+"phone": "7083898947",
+"population": 365579
+},
+{
+"name": "Bhilwara",
+"slug": "bhilwara",
+"state": "Rajasthan",
+"lat": 25.3471,
+"lng": 74.6408,
+"phone": "8261963374",
+"population": 359483
+},
+{
+"name": "Brahmapur",
+"slug": "brahmapur",
+"state": "Odisha",
+"lat": 19.3115,
+"lng": 84.7929,
+"phone": "7083898947",
+"population": 356598
+},
+{
+"name": "Muzaffarpur",
+"slug": "muzaffarpur",
+"state": "Bihar",
+"lat": 26.1226,
+"lng": 85.3906,
+"phone": "8261963374",
+"population": 354462
+},
+{
+"name": "Muzaffarnagar",
+"slug": "muzaffarnagar",
+"state": "Uttar Pradesh",
+"lat": 29.4709,
+"lng": 77.7033,
+"phone": "7083898947",
+"population": 349706
+},
+{
+"name": "Avadi",
+"slug": "avadi",
+"state": "Tamil Nadu",
+"lat": 13.1147,
+"lng": 80.1098,
+"phone": "8261963374",
+"population": 345996
+},
+{
+"name": "Kadapa",
+"slug": "kadapa",
+"state": "Andhra Pradesh",
+"lat": 14.48,
+"lng": 78.8235,
+"phone": "7083898947",
+"population": 344893
+},
+{
+"name": "Kamarhati",
+"slug": "kamarhati",
+"state": "West Bengal",
+"lat": 22.6711,
+"lng": 88.3747,
+"phone": "8261963374",
+"population": 332965
+},
+{
+"name": "Mathura",
+"slug": "mathura",
+"state": "Uttar Pradesh",
+"lat": 27.5035,
+"lng": 77.6722,
+"phone": "7083898947",
+"population": 330511
+},
+{
+"name": "Chandrapur",
+"slug": "chandrapur",
+"state": "Maharashtra",
+"lat": 19.9508,
+"lng": 79.2952,
+"phone": "8261963374",
+"population": 328351
+},
+{
+"name": "Vijayapura",
+"slug": "vijayapura",
+"state": "Karnataka",
+"lat": 16.8244,
+"lng": 75.7154,
+"phone": "7083898947",
+"population": 327427
+},
+{
+"name": "Shivamogga",
+"slug": "shivamogga",
+"state": "Karnataka",
+"lat": 13.9316,
+"lng": 75.5679,
+"phone": "8261963374",
+"population": 322650
+},
+{
+"name": "Alwar",
+"slug": "alwar",
+"state": "Rajasthan",
+"lat": 27.5625,
+"lng": 76.625,
+"phone": "7083898947",
+"population": 322568
+},
+{
+"name": "Shahjahanpur",
+"slug": "shahjahanpur",
+"state": "Uttar Pradesh",
+"lat": 27.8817,
+"lng": 79.9092,
+"phone": "8261963374",
+"population": 320434
+},
+{
+"name": "Junagadh",
+"slug": "junagadh",
+"state": "Gujarat",
+"lat": 21.5197,
+"lng": 70.4598,
+"phone": "7083898947",
+"population": 319462
+},
+{
+"name": "New Delhi",
+"slug": "new-delhi",
+"state": "Delhi",
+"lat": 28.6214,
+"lng": 77.2148,
+"phone": "8261963374",
+"population": 317797
+},
+{
+"name": "Thrissur",
+"slug": "thrissur",
+"state": "Kerala",
+"lat": 10.5167,
+"lng": 76.2167,
+"phone": "7083898947",
+"population": 315957
+},
+{
+"name": "Nizamabad",
+"slug": "nizamabad",
+"state": "Telangana",
+"lat": 18.6715,
+"lng": 78.0988,
+"phone": "8261963374",
+"population": 311152
+},
+{
+"name": "Tumkur",
+"slug": "tumkur",
+"state": "Karnataka",
+"lat": 13.3414,
+"lng": 77.1022,
+"phone": "7083898947",
+"population": 307359
+},
+{
+"name": "Parbhani",
+"slug": "parbhani",
+"state": "Maharashtra",
+"lat": 19.2686,
+"lng": 76.7708,
+"phone": "8261963374",
+"population": 307170
+},
+{
+"name": "Hisar",
+"slug": "hisar",
+"state": "Haryana",
+"lat": 29.1539,
+"lng": 75.7229,
+"phone": "7083898947",
+"population": 307024
+},
+{
+"name": "Firozabad",
+"slug": "firozabad",
+"state": "Uttar Pradesh",
+"lat": 27.1509,
+"lng": 78.3978,
+"phone": "8261963374",
+"population": 306409
+},
+{
+"name": "Kulti",
+"slug": "kulti",
+"state": "West Bengal",
+"lat": 23.7317,
+"lng": 86.8437,
+"phone": "7083898947",
+"population": 305405
+},
+{
+"name": "Karnal",
+"slug": "karnal",
+"state": "Haryana",
+"lat": 29.692,
+"lng": 76.9845,
+"phone": "8261963374",
+"population": 302140
+},
+{
+"name": "Bardhaman",
+"slug": "bardhaman",
+"state": "West Bengal",
+"lat": 23.2557,
+"lng": 87.8569,
+"phone": "7083898947",
+"population": 301725
+},
+{
+"name": "Barasat",
+"slug": "barasat",
+"state": "West Bengal",
+"lat": 22.7215,
+"lng": 88.482,
+"phone": "8261963374",
+"population": 298127
+},
+{
+"name": "Mulugu",
+"slug": "mulugu",
+"state": "Telangana",
+"lat": 18.191,
+"lng": 79.943,
+"phone": "7083898947",
+"population": 297671
+},
+{
+"name": "Bihar Sharif",
+"slug": "bihar-sharif",
+"state": "Bihar",
+"lat": 25.2008,
+"lng": 85.5239,
+"phone": "8261963374",
+"population": 297268
+},
+{
+"name": "Bali",
+"slug": "bali",
+"state": "West Bengal",
+"lat": 22.6486,
+"lng": 88.3411,
+"phone": "7083898947",
+"population": 296973
+},
+{
+"name": "Rampur",
+"slug": "rampur",
+"state": "Uttar Pradesh",
+"lat": 28.8101,
+"lng": 79.027,
+"phone": "8261963374",
+"population": 296418
+},
+{
+"name": "Darbhanga",
+"slug": "darbhanga",
+"state": "Bihar",
+"lat": 26.1522,
+"lng": 85.8971,
+"phone": "7083898947",
+"population": 296039
+},
+{
+"name": "Panipat",
+"slug": "panipat",
+"state": "Haryana",
+"lat": 29.3875,
+"lng": 76.9682,
+"phone": "8261963374",
+"population": 295970
+},
+{
+"name": "Tirupati",
+"slug": "tirupati",
+"state": "Andhra Pradesh",
+"lat": 13.6355,
+"lng": 79.4199,
+"phone": "7083898947",
+"population": 295323
+},
+{
+"name": "Greater Noida",
+"slug": "greater-noida",
+"state": "Uttar Pradesh",
+"lat": 28.4962,
+"lng": 77.536,
+"phone": "8261963374",
+"population": 293908
+},
+{
+"name": "Noida",
+"slug": "noida",
+"state": "Uttar Pradesh",
+"lat": 28.58,
+"lng": 77.33,
+"phone": "7083898947",
+"population": 293908
+},
+{
+"name": "Aizawl",
+"slug": "aizawl",
+"state": "Mizoram",
+"lat": 23.7289,
+"lng": 92.7179,
+"phone": "8261963374",
+"population": 293416
+},
+{
+"name": "Gandhinagar",
+"slug": "gandhinagar",
+"state": "Gujarat",
+"lat": 23.2167,
+"lng": 72.6833,
+"phone": "7083898947",
+"population": 292797
+},
+{
+"name": "Dindigul",
+"slug": "dindigul",
+"state": "Tamil Nadu",
+"lat": 10.369,
+"lng": 77.9804,
+"phone": "8261963374",
+"population": 292512
+},
+{
+"name": "Thanjavur",
+"slug": "thanjavur",
+"state": "Tamil Nadu",
+"lat": 10.7852,
+"lng": 79.1391,
+"phone": "7083898947",
+"population": 291067
+},
+{
+"name": "Karimnagar",
+"slug": "karimnagar",
+"state": "Telangana",
+"lat": 18.4392,
+"lng": 79.1286,
+"phone": "8261963374",
+"population": 289821
+},
+{
+"name": "Dewas",
+"slug": "dewas",
+"state": "Madhya Pradesh",
+"lat": 22.9658,
+"lng": 76.0553,
+"phone": "7083898947",
+"population": 289550
+},
+{
+"name": "Sonipat",
+"slug": "sonipat",
+"state": "Haryana",
+"lat": 28.9948,
+"lng": 77.0194,
+"phone": "8261963374",
+"population": 289333
+},
+{
+"name": "Ichalkaranji",
+"slug": "ichalkaranji",
+"state": "Maharashtra",
+"lat": 16.6912,
+"lng": 74.4605,
+"phone": "7083898947",
+"population": 287353
+},
+{
+"name": "Bathinda",
+"slug": "bathinda",
+"state": "Punjab",
+"lat": 30.2075,
+"lng": 74.9389,
+"phone": "8261963374",
+"population": 285788
+},
+{
+"name": "Jalna",
+"slug": "jalna",
+"state": "Maharashtra",
+"lat": 19.841,
+"lng": 75.8864,
+"phone": "7083898947",
+"population": 285577
+},
+{
+"name": "Satna",
+"slug": "satna",
+"state": "Madhya Pradesh",
+"lat": 24.5773,
+"lng": 80.8272,
+"phone": "8261963374",
+"population": 282977
+},
+{
+"name": "Purnia",
+"slug": "purnia",
+"state": "Bihar",
+"lat": 25.7789,
+"lng": 87.4742,
+"phone": "7083898947",
+"population": 282248
+},
+{
+"name": "Imphal",
+"slug": "imphal",
+"state": "Manipur",
+"lat": 24.8081,
+"lng": 93.9442,
+"phone": "8261963374",
+"population": 277196
+},
+{
+"name": "Sagar",
+"slug": "sagar",
+"state": "Madhya Pradesh",
+"lat": 23.8388,
+"lng": 78.7387,
+"phone": "7083898947",
+"population": 274556
+},
+{
+"name": "Kushinagar",
+"slug": "kushinagar",
+"state": "Uttar Pradesh",
+"lat": 26.7413,
+"lng": 83.8869,
+"phone": "8261963374",
+"population": 274403
+},
+{
+"name": "Rourkela",
+"slug": "rourkela",
+"state": "Odisha",
+"lat": 22.225,
+"lng": 84.8641,
+"phone": "7083898947",
+"population": 273317
+},
+{
+"name": "Durg",
+"slug": "durg",
+"state": "Chhattisgarh",
+"lat": 21.1915,
+"lng": 81.2762,
+"phone": "8261963374",
+"population": 268806
+},
+{
+"name": "Anantapur",
+"slug": "anantapur",
+"state": "Andhra Pradesh",
+"lat": 14.6778,
+"lng": 77.6081,
+"phone": "7083898947",
+"population": 267161
+},
+{
+"name": "Ratlam",
+"slug": "ratlam",
+"state": "Madhya Pradesh",
+"lat": 23.3303,
+"lng": 75.0403,
+"phone": "8261963374",
+"population": 264914
+},
+{
+"name": "Ranipet",
+"slug": "ranipet",
+"state": "Tamil Nadu",
+"lat": 12.9247,
+"lng": 79.3333,
+"phone": "7083898947",
+"population": 264330
+},
+{
+"name": "Arrah",
+"slug": "arrah",
+"state": "Bihar",
+"lat": 25.5563,
+"lng": 84.6633,
+"phone": "8261963374",
+"population": 261430
+},
+{
+"name": "Baranagar",
+"slug": "baranagar",
+"state": "West Bengal",
+"lat": 22.6413,
+"lng": 88.3773,
+"phone": "7083898947",
+"population": 260072
+},
+{
+"name": "Etawah",
+"slug": "etawah",
+"state": "Uttar Pradesh",
+"lat": 26.7762,
+"lng": 79.0213,
+"phone": "8261963374",
+"population": 257448
+},
+{
+"name": "Ambarnath",
+"slug": "ambarnath",
+"state": "Maharashtra",
+"lat": 19.2,
+"lng": 73.1667,
+"phone": "7083898947",
+"population": 253475
+},
+{
+"name": "Naihati",
+"slug": "naihati",
+"state": "West Bengal",
+"lat": 22.894,
+"lng": 88.4152,
+"phone": "8261963374",
+"population": 253221
+},
+{
+"name": "Bharatpur",
+"slug": "bharatpur",
+"state": "Rajasthan",
+"lat": 27.2173,
+"lng": 77.4901,
+"phone": "7083898947",
+"population": 252838
+},
+{
+"name": "Begusarai",
+"slug": "begusarai",
+"state": "Bihar",
+"lat": 25.4185,
+"lng": 86.1339,
+"phone": "8261963374",
+"population": 252008
+},
+{
+"name": "Tiruvottiyur",
+"slug": "tiruvottiyur",
+"state": "Tamil Nadu",
+"lat": 13.1582,
+"lng": 80.3018,
+"phone": "7083898947",
+"population": 249446
+},
+{
+"name": "Gandhidham",
+"slug": "gandhidham",
+"state": "Gujarat",
+"lat": 23.0833,
+"lng": 70.1333,
+"phone": "8261963374",
+"population": 247992
+},
+{
+"name": "Mau",
+"slug": "mau",
+"state": "Uttar Pradesh",
+"lat": 25.9417,
+"lng": 83.5611,
+"phone": "7083898947",
+"population": 246050
+},
+{
+"name": "Sikar",
+"slug": "sikar",
+"state": "Rajasthan",
+"lat": 27.6121,
+"lng": 75.14,
+"phone": "8261963374",
+"population": 244497
+},
+{
+"name": "Hapur",
+"slug": "hapur",
+"state": "Uttar Pradesh",
+"lat": 28.7298,
+"lng": 77.7807,
+"phone": "7083898947",
+"population": 242920
+},
+{
+"name": "Farrukhabad",
+"slug": "farrukhabad",
+"state": "Uttar Pradesh",
+"lat": 27.3913,
+"lng": 79.5793,
+"phone": "8261963374",
+"population": 241152
+},
+{
+"name": "Alappuzha",
+"slug": "alappuzha",
+"state": "Kerala",
+"lat": 9.49,
+"lng": 76.3264,
+"phone": "7083898947",
+"population": 240991
+},
+{
+"name": "Katihar",
+"slug": "katihar",
+"state": "Bihar",
+"lat": 25.5385,
+"lng": 87.5704,
+"phone": "8261963374",
+"population": 240838
+}
+]

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, Search, Phone, Menu, X, Package, Tag, Loader2, Calculator } from "lucide-react";
+import { ShoppingCart, Search, Phone, Menu, X, Package, Tag, Loader2, Calculator, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -158,6 +158,9 @@ export default function Header() {
           <Link to="/calculator" className="hidden lg:flex items-center gap-1.5 text-sm font-medium text-neutral-600 hover:text-brand-primary transition-colors" data-testid="nav-calculator">
             <Calculator className="h-4 w-4" /> Calculator
           </Link>
+          <Link to="/stores" className="hidden lg:flex items-center gap-1.5 text-sm font-medium text-neutral-600 hover:text-brand-primary transition-colors" data-testid="nav-stores">
+            <MapPin className="h-4 w-4" /> Store Locator
+          </Link>
           <a href="tel:+917083898947" className="hidden lg:flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors" data-testid="phone-link">
             <Phone className="h-4 w-4" />
             <span className="font-medium">+91 70838 98947</span>
@@ -196,6 +199,7 @@ export default function Header() {
           <div className="flex flex-col gap-2">
             <Link to="/" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md">All Products</Link>
             <Link to="/calculator" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md flex items-center gap-2"><Calculator className="h-4 w-4" /> Solar Calculator</Link>
+            <Link to="/stores" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md flex items-center gap-2"><MapPin className="h-4 w-4" /> Store Locator</Link>
             <a href="tel:+917083898947" className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md flex items-center gap-2"><Phone className="h-4 w-4" /> +91 70838 98947</a>
             <a href="mailto:info.glannu@gmail.com" className="py-2 px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-md">info.glannu@gmail.com</a>
           </div>

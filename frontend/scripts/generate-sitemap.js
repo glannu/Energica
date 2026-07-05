@@ -25,6 +25,13 @@ products.forEach(p => {
   if (p && p.id && !p.deleted) urls.push({ loc: BASE + "/product/" + p.id, priority: "0.7" });
 });
 
+// Static feature pages + per-city store-locator landing pages
+urls.push({ loc: BASE + "/calculator", priority: "0.6" });
+urls.push({ loc: BASE + "/stores", priority: "0.7" });
+let cities = [];
+try { cities = require(path.join(__dirname, "..", "src", "data", "inCities.json")); } catch (e) {}
+cities.forEach(c => { if (c && c.slug) urls.push({ loc: BASE + "/stores/" + c.slug, priority: "0.6" }); });
+
 const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   urls.map(u => `  <url><loc>${esc(u.loc)}</loc><lastmod>${today}</lastmod><priority>${u.priority}</priority></url>`).join("\n") +
