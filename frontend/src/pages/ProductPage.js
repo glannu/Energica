@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ChevronRight, Plus, Minus, Download, CheckCircle, XCircle, ArrowLeft, MessageCircle, ChevronLeft, ChevronRight as ChevronRightIcon, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@/components/Skeleton";
 import TrustBadges from "@/components/TrustBadges";
 import { setSEO } from "@/lib/seo";
+import { productSlug, isUuid } from "@/lib/slug";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const formatPrice = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
@@ -29,6 +30,7 @@ const getVideoInfo = (url) => {
 export default function ProductPage() {
   const { id } = useParams();
   const { addItem, setIsDrawerOpen } = useQuote();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -37,9 +39,39 @@ export default function ProductPage() {
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [allMedia, setAllMedia] = useState([]);
 
+  // Resolve a keyword slug to the backend product id. Tries the static
+  // products.json snapshot first (fast, CDN-cached), then the live API list
+  // (covers products added after the last frontend build).
+  const resolveSlug = async (slug) => {
+    try {
+      const r = await fetch("/products.json");
+      const d = await r.json();
+      const hit = (d.products || d || []).find((pr) => productSlug(pr) === slug);
+      if (hit) return hit.id;
+    } catch (e) { /* snapshot missing - fall through to API */ }
+    const { data } = await axios.get(`${API}/products`);
+    const hit = (data || []).find((pr) => productSlug(pr) === slug);
+    if (!hit) throw new Error("Product not found");
+    return hit.id;
+  };
+
   useEffect(() => {
     setLoading(true);
-    axios.get(`${API}/products/${id}`).then(({ data }) => {
+    (async () => {
+      // Legacy UUID URLs: fetch once, then redirect to the canonical slug URL.
+      if (isUuid(id)) {
+        try {
+          const { data } = await axios.get(`${API}/products/${id}`);
+          navigate(`/product/${productSlug(data)}`, { replace: true });
+        } catch (e) {
+          toast.error("Product not found");
+          setLoading(false);
+        }
+        return;
+      }
+      try {
+        const pid = await resolveSlug(id);
+        const { data } = await axios.get(`${API}/products/${pid}`);
       setProduct(data);
       setQuantity(data.moq || 1);
 
@@ -68,7 +100,13 @@ export default function ProductPage() {
       } else {
         setSimilarProducts(data.similar_products);
       }
-    }).catch(() => toast.error("Product not found")).finally(() => setLoading(false));
+      } catch (e) {
+        toast.error("Product not found");
+      } finally {
+        setLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -77,7 +115,7 @@ export default function ProductPage() {
     setSEO({
       title: `${product.name} - Price \u20b9${product.price}`,
       description: `Buy ${product.name} online at \u20b9${product.price}. ${(product.description || "").slice(0, 120)} Ships across India from Pune, Maharashtra.`,
-      canonical: `https://solar.glannu.com/product/${product.id}`,
+      canonical: `https://solar.glannu.com/product/${productSlug(product)}`,
       jsonLd: {
         "@context": "https://schema.org",
         "@type": "Product",
@@ -89,7 +127,7 @@ export default function ProductPage() {
         brand: { "@type": "Brand", name: brand },
         offers: {
           "@type": "Offer",
-          url: `https://solar.glannu.com/product/${product.id}`,
+          url: `https://solar.glannu.com/product/${productSlug(product)}`,
           priceCurrency: "INR",
           price: product.price,
           availability: product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",

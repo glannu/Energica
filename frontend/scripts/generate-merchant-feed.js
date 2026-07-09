@@ -1,6 +1,7 @@
 // Generates public/merchant-feed.xml (Google Merchant Center / free Shopping
 // listings) from the product snapshot. Runs at build time, after refresh-data.js.
 const fs = require("fs");
+const { productSlug } = require("../src/lib/slug");
 const path = require("path");
 
 const PUB = path.join(__dirname, "..", "public");
@@ -29,7 +30,7 @@ products.forEach((p) => {
     `      <g:id>${esc(p.item_code || p.id)}</g:id>\n` +
     `      <g:title>${esc(p.name)}</g:title>\n` +
     `      <g:description>${esc(desc)}</g:description>\n` +
-    `      <g:link>${esc(BASE + "/product/" + p.id)}</g:link>\n` +
+    `      <g:link>${esc(BASE + "/product/" + productSlug(p))}</g:link>\n` +
     (img ? `      <g:image_link>${esc(img)}</g:image_link>\n` : "") +
     `      <g:availability>${p.in_stock ? "in_stock" : "out_of_stock"}</g:availability>\n` +
     `      <g:price>${price.toFixed(2)} INR</g:price>\n` +

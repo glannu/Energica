@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { productSlug } from "@/lib/slug";
 import { Plus, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -42,7 +43,7 @@ export default function ProductCard({ product, loading }) {
 
   return (
     <div data-testid="product-card" className="group relative flex h-full flex-col bg-white border border-neutral-200 rounded-lg overflow-hidden hover:shadow-[0_6px_20px_rgb(0,0,0,0.05)] hover:border-neutral-300 transition-all duration-300 hover:-translate-y-0.5">
-      <Link to={`/product/${product.id}`} data-testid={`product-link-${product.item_code}`}>
+      <Link to={`/product/${productSlug(product)}`} data-testid={`product-link-${product.item_code}`}>
         <div className="aspect-[4/3] bg-neutral-50 p-2 sm:p-3 flex items-center justify-center relative overflow-hidden">
           <img src={product.image_url} alt={product.name} className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105" loading="lazy" />
           {!product.in_stock && (
@@ -54,7 +55,7 @@ export default function ProductCard({ product, loading }) {
       </Link>
       <div className="p-3 flex flex-col flex-grow">
         <Badge variant="secondary" className="w-fit mb-1.5 text-[10px] font-bold uppercase tracking-wider text-neutral-500">{product.category}</Badge>
-        <Link to={`/product/${product.id}`} className="hover:text-brand-primary transition-colors">
+        <Link to={`/product/${productSlug(product)}`} className="hover:text-brand-primary transition-colors">
           <h3 className="font-heading font-semibold text-neutral-900 mb-1 line-clamp-2 leading-tight text-[13px]">{product.name}</h3>
         </Link>
         <div className="mt-auto pt-2">

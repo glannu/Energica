@@ -1,6 +1,7 @@
 // Generates public/sitemap.xml from the product/category snapshots.
 // Runs at build time, after refresh-data.js.
 const fs = require("fs");
+const { productSlug } = require("../src/lib/slug");
 const path = require("path");
 
 const PUB = path.join(__dirname, "..", "public");
@@ -22,7 +23,7 @@ categories.forEach(c => {
   if (c && c.name) urls.push({ loc: BASE + "/?category=" + encodeURIComponent(c.name), priority: "0.8" });
 });
 products.forEach(p => {
-  if (p && p.id && !p.deleted) urls.push({ loc: BASE + "/product/" + p.id, priority: "0.7" });
+  if (p && p.id && !p.deleted) urls.push({ loc: BASE + "/product/" + productSlug(p), priority: "0.7" });
 });
 
 // Static feature pages + per-city store-locator landing pages

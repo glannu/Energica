@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { productSlug } from "@/lib/slug";
 import { ShoppingCart, Search, Phone, Menu, X, Package, Tag, Loader2, Calculator, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -132,7 +133,7 @@ export default function Header() {
                       {searchResults.products.map(product => (
                         <Link
                           key={product.id}
-                          to={`/product/${product.id}`}
+                          to={`/product/${productSlug(product)}`}
                           onClick={() => { setSearchQuery(''); setShowDropdown(false); }}
                           className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-neutral-50 text-sm text-neutral-700"
                         >
