@@ -8,6 +8,8 @@ import ProductPage from "@/pages/ProductPage";
 import CheckoutPage from "@/pages/CheckoutPage";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminPage from "@/pages/AdminPage";
+import AboutPage from "@/pages/AboutPage";
+import TermsPage from "@/pages/TermsPage";
 import CalculatorPage from "@/pages/CalculatorPage";
 import StoreLocatorPage from "@/pages/StoreLocatorPage";
 import CityPage from "@/pages/CityPage";
@@ -27,6 +29,8 @@ function App() {
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/calculator" element={<CalculatorPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/terms" element={<TermsPage />} />
             <Route path="/stores" element={<StoreLocatorPage />} />
             <Route path="/stores/:slug" element={<CityPage />} />
             <Route path="/admin/login" element={<AdminLogin />} />

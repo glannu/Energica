@@ -28,6 +28,8 @@ products.forEach(p => {
 
 // Static feature pages + per-city store-locator landing pages
 urls.push({ loc: BASE + "/calculator", priority: "0.6" });
+urls.push({ loc: BASE + "/about", priority: "0.5" });
+urls.push({ loc: BASE + "/terms", priority: "0.3" });
 urls.push({ loc: BASE + "/stores", priority: "0.7" });
 let cities = [];
 try { cities = require(path.join(__dirname, "..", "src", "data", "inCities.json")); } catch (e) {}

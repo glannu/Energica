@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
-import { SlidersHorizontal, ChevronDown, Loader2, ChevronLeft, ChevronRight, X, Zap, ShieldCheck, Package } from "lucide-react";
+import { SlidersHorizontal, ChevronDown, Loader2, ChevronLeft, ChevronRight, X, Zap, ShieldCheck, Package, Facebook, Instagram, Linkedin, Youtube, Twitter, MessageCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,7 @@ export default function StorePage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const categoryScrollRef = useRef(null);
+  const apiSettled = useRef(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
@@ -105,6 +106,7 @@ export default function StorePage() {
       if (searchQuery) params.search = searchQuery;
       if (stockFilter) params.in_stock = stockFilter;
       const { data } = await axios.get(`${API}/products`, { params });
+      apiSettled.current = true;
       setProducts(prev => append ? [...prev, ...data.products] : data.products);
       setTotal(data.total);
       setTotalPages(data.total_pages);
@@ -123,6 +125,34 @@ export default function StorePage() {
       const { data } = await axios.get(`${API}/categories`);
       setCategories(data);
     } catch (err) { console.error(err); }
+  }, []);
+
+  // Instant first paint from the static build snapshots (/products.json,
+  // /categories.json) while the live API - hosted on a free tier that can
+  // cold-start for 30s+ - wakes up. Live data replaces it on arrival.
+  useEffect(() => {
+    if (searchParams.get("search") || searchParams.get("category")) return;
+    (async () => {
+      try {
+        const [pr, cr] = await Promise.all([
+          fetch("/products.json").then((r) => r.json()),
+          fetch("/categories.json").then((r) => r.json()).catch(() => null),
+        ]);
+        if (Array.isArray(cr) && cr.length) setCategories((prev) => (prev.length ? prev : cr));
+        if (apiSettled.current) return;
+        const list = (pr.products || pr || [])
+          .filter((pd) => pd && !pd.deleted)
+          .sort((a, b) => (a.price || 0) - (b.price || 0));
+        if (list.length) {
+          setProducts((prev) => (prev.length ? prev : list.slice(0, 20)));
+          setTotal(list.length);
+          setTotalPages(Math.ceil(list.length / 20));
+          setHasMore(list.length > 20);
+          setLoading(false);
+        }
+      } catch (e) { /* snapshot unavailable - the API path still loads */ }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
@@ -394,12 +424,22 @@ export default function StorePage() {
           </div>
           <div>
             <h3 className="font-heading font-semibold text-sm uppercase tracking-wider text-neutral-500 mb-3">Quick Links</h3>
-            <p className="text-sm text-neutral-600 hover:text-brand-primary cursor-pointer">All Products</p>
-            <p className="text-sm text-neutral-600 mt-1 hover:text-brand-primary cursor-pointer">About Us</p>
-            <p className="text-sm text-neutral-600 mt-1 hover:text-brand-primary cursor-pointer">Terms & Conditions</p>
+            <Link to="/" className="block text-sm text-neutral-600 hover:text-brand-primary">All Products</Link>
+            <Link to="/calculator" className="block text-sm text-neutral-600 mt-1 hover:text-brand-primary">Solar Calculator</Link>
+            <Link to="/stores" className="block text-sm text-neutral-600 mt-1 hover:text-brand-primary">Store Locator</Link>
+            <Link to="/about" className="block text-sm text-neutral-600 mt-1 hover:text-brand-primary">About Us</Link>
+            <Link to="/terms" className="block text-sm text-neutral-600 mt-1 hover:text-brand-primary">Terms &amp; Conditions</Link>
           </div>
         </div>
         <Separator className="my-6" />
+        <div className="flex justify-center gap-5 mb-4">
+          <a href="https://facebook.com/GlannuIndustries" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-neutral-400 hover:text-brand-primary"><Facebook className="h-5 w-5" /></a>
+          <a href="https://instagram.com/glannuindustries" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-neutral-400 hover:text-brand-primary"><Instagram className="h-5 w-5" /></a>
+          <a href="https://linkedin.com/company/glannu" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-neutral-400 hover:text-brand-primary"><Linkedin className="h-5 w-5" /></a>
+          <a href="https://youtube.com/@glannuindustries" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-neutral-400 hover:text-brand-primary"><Youtube className="h-5 w-5" /></a>
+          <a href="https://twitter.com/glannuindustries" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X" className="text-neutral-400 hover:text-brand-primary"><Twitter className="h-5 w-5" /></a>
+          <a href="https://wa.me/918605657016" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="text-neutral-400 hover:text-green-600"><MessageCircle className="h-5 w-5" /></a>
+        </div>
         <p className="text-xs text-neutral-400 text-center">&copy; {new Date().getFullYear()} Glannu. All rights reserved.</p>
       </footer>
     </main>
